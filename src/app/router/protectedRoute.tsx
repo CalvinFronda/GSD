@@ -1,6 +1,13 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuth } from "@/features/auth/authContext";
-import { ReactNode } from "react";
+import Header from "@/components/ui/header";
+
+const ProtectedPage = () => (
+  <div>
+    <Header />
+    <Outlet />
+  </div>
+);
 
 export const ProtectedRoute = () => {
   const { user, isLoading } = useAuth();
@@ -9,5 +16,5 @@ export const ProtectedRoute = () => {
     return <div>Loading...</div>; // You can replace this with a spinner or skeleton screen
   }
 
-  return user ? <Outlet /> : <Navigate to="/login" replace />;
+  return user ? <ProtectedPage /> : <Navigate to="/login" replace />;
 };
