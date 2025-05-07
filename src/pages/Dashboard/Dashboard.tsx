@@ -1,20 +1,12 @@
 import LogoutButton from "@/components/ui/logoutbutton";
+import { SidebarHeader } from "@/components/ui/sidebar";
+import { Sidebar } from "lucide-react";
+import Layout from "./layout";
 
 export default function Dashboard() {
   return (
     <div>
-      <div className="sidebar">
-        <ul>
-          <li>Home</li>
-          <li>Calendar</li>
-          <li>Something</li>
-        </ul>
-      </div>
-
-      <div>
-        <h1>Main </h1>
-        <LogoutButton />
-      </div>
+      <Layout />
     </div>
   );
 }
