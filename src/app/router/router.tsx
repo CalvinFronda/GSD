@@ -21,7 +21,8 @@ export const AppRouter = () => (
         </Route>
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/inbox" element={<Dashboard />} />
+          <Route path="/dashboard/projects" element={<h1>Project</h1>} />
         </Route>
       </Routes>
     </AuthProvider>

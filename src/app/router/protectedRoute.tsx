@@ -5,7 +5,9 @@ import Header from "@/components/ui/header";
 const ProtectedPage = () => (
   <div>
     <Header />
-    <Outlet />
+    <div className="flex flex-col w-100 pt-28">
+      <Outlet />
+    </div>
   </div>
 );
 
@@ -13,7 +15,7 @@ export const ProtectedRoute = () => {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div>Loading...</div>; // You can replace this with a spinner or skeleton screen
+    return <div>Loading...</div>;
   }
 
   return user ? <ProtectedPage /> : <Navigate to="/login" replace />;
