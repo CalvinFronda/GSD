@@ -13,21 +13,16 @@ export const AppRouter = () => (
   <BrowserRouter>
     <AuthProvider>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route element={<AuthLayout />}>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<Signup />} />
-          </Route>
+        <Route path="/" element={<Layout />} />
+        <Route index element={<HomePage />} />
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<Signup />} />
         </Route>
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
       </Routes>
     </AuthProvider>
   </BrowserRouter>
