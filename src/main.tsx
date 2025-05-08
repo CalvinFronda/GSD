@@ -17,5 +17,5 @@ export { firebaseApp, db, auth };
 const root = document.getElementById("root");
 
 createRoot(root!).render(
-  <StrictMode>{firebaseApp ? <App /> : <></>}</StrictMode>
+  <StrictMode>{firebaseApp ? <App /> : <></>}</StrictMode>,
 );

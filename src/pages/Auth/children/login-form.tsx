@@ -1,4 +1,3 @@
-import { useState } from "react";
 import FirebaseAuthService from "@/services/firebase-auth.service";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -40,11 +39,12 @@ export function LoginForm({
   const navigate = useNavigate();
 
   const handleLogin = async (values: z.infer<typeof loginSchema>) => {
+    const { email, password } = values;
     try {
-      await firebaseAuthService.loginUser(values.email, values.password);
+      await firebaseAuthService.loginUser(email, password);
       navigate("/dashboard/inbox");
     } catch (error) {
-      console.error(error);
+      console.error("error =", error);
     }
   };
 
@@ -102,9 +102,11 @@ export function LoginForm({
                   <Button type="submit" className="w-full">
                     Login
                   </Button>
+                  {/* 
+                    TODO later
                   <Button variant="outline" className="w-full">
                     Login with Google
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
               <div className="mt-4 text-center text-sm">

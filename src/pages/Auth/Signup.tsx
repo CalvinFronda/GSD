@@ -1,3 +1,5 @@
+import FirebaseAuthService from "@/services/firebase-auth.service";
+
 import {
   Card,
   CardHeader,
@@ -5,12 +7,52 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { useNavigate } from "react-router";
+
+const signUpSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string(),
+  password: z.string(),
+});
+
 const Signup = ({ className, ...props }: React.ComponentProps<"div">) => {
+  const firebaseAuthService = new FirebaseAuthService();
+  const navigate = useNavigate();
+  const signUpForm = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
+  });
+
+  const handleSignup = async (values: z.infer<typeof signUpSchema>) => {
+    const { firstName, lastName, email, password } = values;
+    try {
+      await firebaseAuthService.createUser(
+        firstName,
+        lastName,
+        email,
+        password,
+      );
+      await firebaseAuthService.loginUser(email, password);
+      navigate("/dashboard/inbox");
+    } catch (error) {
+      console.error("error = ", error);
+    }
+  };
+
   return (
     <div className="flex min-h-svh w-full items-center justify-center  pt-0 pr-6 pb-6 pl-6 ">
       <div className="w-full max-w-sm">
@@ -23,60 +65,99 @@ const Signup = ({ className, ...props }: React.ComponentProps<"div">) => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form>
-                <div className="flex flex-col gap-6">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="first_name">First Name</Label>
-                      <Input
-                        id="first_name"
-                        type="text"
-                        placeholder="John"
-                        required
-                      />
+              <Form {...signUpForm}>
+                <form onSubmit={signUpForm.handleSubmit(handleSignup)}>
+                  <div className="flex flex-col gap-6">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="grid gap-2">
+                        <FormField
+                          control={signUpForm.control}
+                          name="firstName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>First Name</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="text"
+                                  placeholder="John"
+                                  {...field}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <FormField
+                          control={signUpForm.control}
+                          name="lastName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Last Name</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="name"
+                                  placeholder="Doe"
+                                  {...field}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="last_name">Last Name</Label>
-                      <Input
-                        id="last_name"
-                        type="text"
-                        placeholder="Doe"
-                        required
-                      />
-                    </div>
-                  </div>
 
-                  <div className="grid gap-3">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="m@example.com"
-                      required
-                    />
-                  </div>
-                  <div className="grid gap-3">
-                    <div className="flex items-center">
-                      <Label htmlFor="password">Password</Label>
+                    <div className="grid gap-3">
+                      <FormField
+                        control={signUpForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="email"
+                                placeholder="john@email.com"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
                     </div>
-                    <Input id="password" type="password" required />
+                    <div className="grid gap-3">
+                      <FormField
+                        control={signUpForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Password</FormLabel>
+                            <FormControl>
+                              <Input type="password" {...field} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <Button type="submit" className="w-full">
+                        Signup
+                      </Button>
+                      {/* 
+                        TODO later
+                      <Button variant="outline" className="w-full">
+                        Sign up with Google
+                      </Button> */}
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-3">
-                    <Button type="submit" className="w-full">
-                      Signup
-                    </Button>
-                    <Button variant="outline" className="w-full">
-                      Sign up with Google
-                    </Button>
+                  <div className="mt-4 text-center text-sm">
+                    Have an account?
+                    <a href="/login" className="underline underline-offset-4">
+                      Login
+                    </a>
                   </div>
-                </div>
-                <div className="mt-4 text-center text-sm">
-                  Have an account?
-                  <a href="/login" className="underline underline-offset-4">
-                    Login
-                  </a>
-                </div>
-              </form>
+                </form>
+              </Form>
             </CardContent>
           </Card>
         </div>

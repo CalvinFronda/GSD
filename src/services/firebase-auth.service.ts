@@ -1,5 +1,12 @@
 import { auth } from "@/main";
-import { Auth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { db } from "@/main";
+import {
+  Auth,
+  signInWithEmailAndPassword,
+  signOut,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 class FirebaseAuth {
   auth: Auth;
@@ -13,7 +20,7 @@ class FirebaseAuth {
       const { user } = await signInWithEmailAndPassword(
         this.auth,
         email,
-        password
+        password,
       );
       return user;
     } catch (error) {
@@ -25,7 +32,7 @@ class FirebaseAuth {
   // TODO: signOut()
   async signOut() {
     try {
-      await signOut(auth);
+      await signOut(this.auth);
     } catch (error) {
       console.error("error =", error);
       return null;
@@ -33,6 +40,37 @@ class FirebaseAuth {
   }
 
   // TODO: createUser()
+  async createUser(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+  ) {
+    try {
+      const { user } = await createUserWithEmailAndPassword(
+        this.auth,
+        email,
+        password,
+      );
+      const newUser = {
+        uid: user.uid,
+        email,
+        firstName,
+        lastName,
+        photo: null,
+        points: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        deletedAt: null,
+      };
+
+      const userDoc = doc(db, "users", user.uid);
+      await setDoc(userDoc, newUser);
+      return user;
+    } catch (error) {
+      console.error("error = ", error);
+    }
+  }
 }
 
 export default FirebaseAuth;
