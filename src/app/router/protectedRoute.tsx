@@ -5,7 +5,7 @@ import Header from "@/components/ui/header";
 const ProtectedPage = () => (
   <div>
     <Header />
-    <div className="flex flex-col w-100 pt-28">
+    <div className="flex flex-col w-full pt-28">
       <Outlet />
     </div>
   </div>
