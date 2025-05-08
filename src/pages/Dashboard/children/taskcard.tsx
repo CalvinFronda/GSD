@@ -6,15 +6,15 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./card";
-import { Button } from "./button";
+} from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
 
 interface TaskCardProps {
   title: string;
   description: string;
 }
 
-//
+// TODO
 const TaskCard = ({ title, description }: TaskCardProps) => {
   const [completed, setCompleted] = React.useState(false);
 

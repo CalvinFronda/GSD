@@ -1,7 +1,7 @@
-import { Button } from "./button";
+import { Button } from "../../../components/ui/button";
 import { signOut } from "firebase/auth";
-import { auth } from "@/shared/firebase/client";
 
+// TODO
 export default function LogoutButton() {
   const handleLogout = async () => {
     await signOut(auth);

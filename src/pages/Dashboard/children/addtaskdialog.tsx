@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DB } from "@/shared/firebase/client";
+import { db } from "@/main";
 import { collection, addDoc } from "firebase/firestore";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -43,13 +43,13 @@ const taskSchema = z.object({
 export function AddTaskDialog() {
   const [open, setOpen] = useState(false);
 
-  const localform = useForm<z.infer<typeof taskSchema>>({
+  const taskForm = useForm<z.infer<typeof taskSchema>>({
     resolver: zodResolver(taskSchema),
   });
 
   const onSubmit = async (values: z.infer<typeof taskSchema>) => {
     try {
-      const taskCollection = collection(DB, "tasks");
+      const taskCollection = collection(db, "tasks");
       const defaultValues = {
         ...values,
         status: "NOT_STARTED",
@@ -71,13 +71,13 @@ export function AddTaskDialog() {
           <DialogTitle>Create new task</DialogTitle>
         </DialogHeader>
 
-        <Form {...localform}>
+        <Form {...taskForm}>
           <form
             className="flex flex-col gap-4"
-            onSubmit={localform.handleSubmit(onSubmit)}
+            onSubmit={taskForm.handleSubmit(onSubmit)}
           >
             <FormField
-              control={localform.control}
+              control={taskForm.control}
               name="title"
               render={({ field }) => (
                 <FormItem>
@@ -91,7 +91,7 @@ export function AddTaskDialog() {
             />
 
             <FormField
-              control={localform.control}
+              control={taskForm.control}
               name="dueDate"
               render={({ field }) => (
                 <FormItem>
@@ -105,7 +105,7 @@ export function AddTaskDialog() {
             />
 
             <FormField
-              control={localform.control}
+              control={taskForm.control}
               name="difficulty"
               render={({ field }) => (
                 <FormItem>
@@ -131,7 +131,7 @@ export function AddTaskDialog() {
             />
 
             <FormField
-              control={localform.control}
+              control={taskForm.control}
               name="description"
               render={({ field }) => (
                 <FormItem>

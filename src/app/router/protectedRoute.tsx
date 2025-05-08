@@ -1,13 +1,11 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuth } from "@/features/auth/authContext";
-import Header from "@/components/ui/header";
+import Header from "@/pages/Dashboard/children/header";
 
 const ProtectedPage = () => (
   <div>
     <Header />
-    <div className="flex flex-col w-full pt-28">
-      <Outlet />
-    </div>
+    <Outlet />
   </div>
 );
 

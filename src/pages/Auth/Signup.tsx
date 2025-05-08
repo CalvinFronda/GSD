@@ -10,11 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const Signup = ({
-  className,
-
-  ...props
-}: React.ComponentProps<"div">) => {
+const Signup = ({ className, ...props }: React.ComponentProps<"div">) => {
   return (
     <div className="flex min-h-svh w-full items-center justify-center  pt-0 pr-6 pb-6 pl-6 ">
       <div className="w-full max-w-sm">

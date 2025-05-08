@@ -1,22 +1,31 @@
 import { useState } from "react";
-import { AddTaskDialog } from "@/components/ui/addtaskdialog";
-import TaskCard from "@/components/ui/taskcard";
-import { DB } from "@/shared/firebase/client";
+import { AddTaskDialog } from "@/pages/Dashboard/children/addtaskdialog";
+import TaskCard from "@/pages/Dashboard/children/taskcard";
+import { db } from "@/main";
 import { collection, getDocs, query } from "firebase/firestore";
 import { useEffect } from "react";
 
+interface Task {
+  title: string;
+  description: string;
+  difficulty: string;
+  dueDate: string;
+  id: string;
+  status: string;
+}
+
 export default function Dashboard() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const tasksCollection = collection(DB, "tasks");
+        const tasksCollection = collection(db, "tasks");
         const q = query(tasksCollection);
         const querySnapshot = await getDocs(q);
         const tasksData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
           ...doc.data(),
         }));
+        // TODO
         setTasks(tasksData);
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -24,14 +33,14 @@ export default function Dashboard() {
     };
     fetchTasks();
   }, []);
-  console.log(tasks);
+
   return (
-    <div className="flex flex-col gap-4  px-4 lg:px-6">
-      <div>Section card </div>
+    <div className="flex flex-col gap-4  px-4 lg:px-6 py-28">
+      <h1>Need to orginize</h1>
       <div className="w-1/4">
         <AddTaskDialog />
       </div>
-      <div className="flex flex-row gap-5 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {tasks.map(({ title, description }, i) => (
           <TaskCard key={i} title={title} description={description} />
         ))}

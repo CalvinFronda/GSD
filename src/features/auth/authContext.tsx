@@ -1,12 +1,6 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "@/shared/firebase/client";
+import { auth } from "@/main";
 
 interface AuthContextType {
   user: User | null;
@@ -26,8 +20,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setIsLoading(false);
+      try {
+        if (firebaseUser) {
+          // TODO
+          console.log("USER IS LOGGED IN");
+          // if user exists in firestore
+          // getDoc**
+          // if not create user in firestore
+          // else do nothing ( or add field to Usermodel called lastSeenAt and updated that as well as updatedAt)
+
+          setUser(firebaseUser);
+        } else {
+          console.log("USER IS LOGGED OUT");
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("error =", error);
+      } finally {
+        setIsLoading(false);
+      }
     });
 
     return () => unsubscribe();
