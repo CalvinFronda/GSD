@@ -25,7 +25,7 @@ export function LoginForm({
     e.preventDefault();
     try {
       await loginUser(email, password);
-      navigate("/dashboard");
+      navigate("/dashboard/inbox");
     } catch (error) {
       console.error(error);
     }
