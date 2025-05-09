@@ -2,17 +2,19 @@ import { useState } from "react";
 import { AddTaskDialog } from "@/pages/Dashboard/children/addtaskdialog";
 import TaskCard from "@/pages/Dashboard/children/taskcard";
 import { db } from "@/main";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect } from "react";
 import { Task } from "@/models";
+import { useAuth } from "@/features/auth/authContext";
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const { user } = useAuth();
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const tasksCollection = collection(db, "tasks");
-        const q = query(tasksCollection);
+        const q = query(tasksCollection, where("owner", "==", user?.uid));
         const querySnapshot = await getDocs(q);
         const tasksData = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
