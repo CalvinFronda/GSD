@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import NavBar from "@/widgets/Navbar/Navbar";
+import NavBar from "@/components/layout/Navbar";
 const HomePage = () => {
   const currentYear = new Date().getFullYear();
   return (

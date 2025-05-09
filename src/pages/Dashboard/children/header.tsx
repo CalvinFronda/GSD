@@ -10,7 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export default function Header() {
   const userIcon = user?.displayName;
   // TODO: get uuId get to users full name
   return (
-    <header className="fixed top-4 left-4 right-4 z-100 flex items-center justify-between bg-gray-700 text-white px-8 py-4 rounded-xl shadow-lg">
+    <header className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between bg-gray-700 text-white px-8 py-4 rounded-xl shadow-lg">
       <div className="flex-1 flex justify-center space-x-6">
         <Button
           variant="ghost"
@@ -41,7 +41,7 @@ export default function Header() {
           Projects
         </Button>
       </div>
-      <div className="absolute right-8 flex items-center space-x-4">
+      <div className="absolute right-8 flex items-center space-x-4 z-100">
         <Separator orientation="vertical" className="h-6 bg-white" />
         <DropdownMenu>
           <DropdownMenuTrigger>

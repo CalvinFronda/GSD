@@ -22,7 +22,7 @@ class FirebaseAuth {
       const { user } = await signInWithEmailAndPassword(
         this.auth,
         email,
-        password,
+        password
       );
       return user;
     } catch (error) {
@@ -46,13 +46,13 @@ class FirebaseAuth {
     firstName: string,
     lastName: string,
     email: string,
-    password: string,
+    password: string
   ) {
     try {
       const { user } = await createUserWithEmailAndPassword(
         this.auth,
         email,
-        password,
+        password
       );
 
       const newUser = new User(email, firstName, lastName);
@@ -66,7 +66,6 @@ class FirebaseAuth {
   }
 
   me() {
-    console.log(this.auth.currentUser);
     return this.auth.currentUser;
   }
 }
