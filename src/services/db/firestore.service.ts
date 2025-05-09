@@ -9,6 +9,9 @@ import {
   getDocs,
   QueryConstraint,
   query,
+  DocumentData,
+  updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { COLLECTIONS } from "@/constants/firestore.constants";
 import type { User, Task } from "@/models";
@@ -26,33 +29,11 @@ class FirestoreService {
     this.model = model;
   }
 
-  async create<T>(payload: Promise<T>) {
-    try {
-      const add = await addDoc(this.collection, payload);
-      return add;
-    } catch (error) {
-      console.error("error =", error);
-      return null;
-    }
-  }
-  // TODO
+  /**
+   *   GET method -> if id provided -> get single document
+   *              -> if no id -> get all documents
+   * */
 
-  // To be able to query within other services
-  async queryDocs<T>(constraints: QueryConstraint[]): Promise<T[]> {
-    try {
-      const q = query(this.collection, ...constraints);
-      const querySnap = await getDocs(q);
-      return querySnap.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as T[];
-    } catch (error) {
-      console.error("error = ", error);
-      return [];
-    }
-  }
-
-  // get a single or get all from a collection
   async get<T>(id?: string): Promise<T | T[] | null> {
     try {
       if (id) {
@@ -77,11 +58,66 @@ class FirestoreService {
     }
   }
 
-  // update
+  /**
+   *   CREATE method -> create new document depending on collection
+   * */
 
-  // delete
+  async create<T>(payload: Promise<T>) {
+    try {
+      const add = await addDoc(this.collection, payload);
+      return add;
+    } catch (error) {
+      console.error("error =", error);
+      return null;
+    }
+  }
 
-  // list
+  /**
+   *   UPDATE method -> if id provided -> get single document
+   *              -> if no id -> get all documents
+   * */
+
+  async update<T>(id: string, payload: Partial<T>) {
+    try {
+      const docRef = doc(this.db, this.collectionName, id);
+      await updateDoc(docRef, payload as DocumentData);
+      return true;
+    } catch (error) {
+      console.error("error =", error);
+      return false;
+    }
+  }
+
+  /**
+   * DELETE -> requires document id
+   */
+  async delete(id: string) {
+    try {
+      const docRef = doc(this.db, this.collectionName, id);
+      await deleteDoc(docRef);
+      return true;
+    } catch (error) {
+      console.error("error =", error);
+      return false;
+    }
+  }
+
+  /**
+   *   Query method -> used to query data per service
+   * */
+  async queryDocs<T>(constraints: QueryConstraint[]): Promise<T[]> {
+    try {
+      const q = query(this.collection, ...constraints);
+      const querySnap = await getDocs(q);
+      return querySnap.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as T[];
+    } catch (error) {
+      console.error("error = ", error);
+      return [];
+    }
+  }
 }
 
 export default FirestoreService;
