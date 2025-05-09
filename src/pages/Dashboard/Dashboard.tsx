@@ -4,15 +4,7 @@ import TaskCard from "@/pages/Dashboard/children/taskcard";
 import { db } from "@/main";
 import { collection, getDocs, query } from "firebase/firestore";
 import { useEffect } from "react";
-
-interface Task {
-  title: string;
-  description: string;
-  difficulty: string;
-  dueDate: string;
-  id: string;
-  status: string;
-}
+import { Task } from "@/models";
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -41,8 +33,8 @@ export default function Dashboard() {
         <AddTaskDialog />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {tasks.map(({ title, description }, i) => (
-          <TaskCard key={i} title={title} description={description} />
+        {tasks.map((task, i) => (
+          <TaskCard key={i} task={task} />
         ))}
       </div>
     </div>

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Card,
   CardContent,
@@ -8,33 +7,34 @@ import {
   CardTitle,
 } from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
-
-interface TaskCardProps {
-  title: string;
-  description: string;
+import type { Task } from "@/models";
+export enum TaskStatus {
+  NOT_STRTED = "NOT_STARTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
 }
 
+const isCompleted = (status: TaskStatus) => status === TaskStatus.COMPLETED;
 // TODO
-const TaskCard = ({ title, description }: TaskCardProps) => {
-  const [completed, setCompleted] = React.useState(false);
-
+const TaskCard = ({ task }: { task: Task }) => {
+  const { content, status, difficulty } = task;
   return (
     <Card className="min-h-80  min-w-80">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>{content.title}</CardTitle>
         <CardDescription className="max-h-35 overflow-y-auto">
-          {description}
+          {content.description}
         </CardDescription>
         <CardDescription>
-          {/* <div className="flex flex-row gap-2">
-            <span> {completed ? "done" : "not done"} status</span>
-            <span>difficulty</span>
-          </div> */}
+          <div className="flex flex-row gap-2">
+            <span> {isCompleted(status) ? "done" : "not done"} status</span>
+            <span>difficulty: {difficulty}</span>
+          </div>
         </CardDescription>
       </CardHeader>
       <CardContent>{/* <div>some random context</div> */}</CardContent>
       <CardFooter>
-        <Button onClick={() => setCompleted(true)}>Complete Task</Button>
+        <Button>Complete Task</Button>
       </CardFooter>
     </Card>
   );

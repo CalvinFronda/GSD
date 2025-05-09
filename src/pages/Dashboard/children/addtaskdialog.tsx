@@ -32,29 +32,44 @@ import { collection, addDoc } from "firebase/firestore";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/features/auth/authContext";
+import { Task } from "@/models";
 
 const taskSchema = z.object({
   title: z.string(),
   dueDate: z.string(),
-  difficulty: z.string(),
+  weight: z.string(),
   description: z.string(),
+  difficulty: z.preprocess((val) => Number(val), z.number().int()),
 });
 
 export function AddTaskDialog() {
   const [open, setOpen] = useState(false);
 
-  const taskForm = useForm<z.infer<typeof taskSchema>>({
+  const taskForm = useForm<z.input<typeof taskSchema>>({
     resolver: zodResolver(taskSchema),
   });
 
-  const onSubmit = async (values: z.infer<typeof taskSchema>) => {
+  const { user } = useAuth();
+
+  const onSubmit = async (values: z.input<typeof taskSchema>) => {
+    const { title, dueDate, weight, description, difficulty } =
+      taskSchema.parse(values);
     try {
       const taskCollection = collection(db, "tasks");
-      const defaultValues = {
-        ...values,
-        status: "NOT_STARTED",
-      };
-      await addDoc(taskCollection, defaultValues);
+
+      const task = new Task(
+        user?.uid || "",
+        dueDate,
+        difficulty,
+        weight,
+        [],
+        title,
+        description,
+        [],
+      );
+
+      await addDoc(taskCollection, task.asObject());
       setOpen(false);
     } catch (error: any) {
       console.error("Error adding task: ", error);
@@ -103,33 +118,55 @@ export function AddTaskDialog() {
                 </FormItem>
               )}
             />
+            <div className="flex flex-row gap-4">
+              <FormField
+                control={taskForm.control}
+                name="difficulty"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Difficulty</FormLabel>
+                    <Select onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select difficulty" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="1">Easy</SelectItem>
+                        <SelectItem value="2">Medium</SelectItem>
+                        <SelectItem value="3">Hard</SelectItem>
+                        <SelectItem value="4">Very Hard</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={taskForm.control}
-              name="difficulty"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Difficulty</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select difficulty" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent defaultValue={"0"}>
-                      <SelectItem value="easy">Easy</SelectItem>
-                      <SelectItem value="medium">Medium</SelectItem>
-                      <SelectItem value="hard">Hard</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+              <FormField
+                control={taskForm.control}
+                name="weight"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Weight</FormLabel>
+                    <Select onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select weight" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="2">2</SelectItem>
+                        <SelectItem value="3">3</SelectItem>
+                        <SelectItem value="4">4</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={taskForm.control}
               name="description"
