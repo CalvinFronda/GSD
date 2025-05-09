@@ -11,5 +11,10 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
+// make this into a hook
+
+// useInitFirebase()
+
+// useLocalStorage
 
 export default firebaseApp;

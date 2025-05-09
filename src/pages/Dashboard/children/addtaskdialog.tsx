@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -27,49 +30,48 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { db } from "@/main";
-import { collection, addDoc } from "firebase/firestore";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "@/features/auth/authContext";
+
 import { Task } from "@/models";
+import { TaskDifficulty, TaskWeight } from "@/types";
+import TasksFirestoreService from "@/services/db/tasks.firestore.service";
+import FirebaseAuth from "@/services/firebase-auth.service";
 
 const taskSchema = z.object({
   title: z.string(),
   dueDate: z.string(),
-  weight: z.string(),
+  weight: z.preprocess((val) => Number(val), z.number().int()),
   description: z.string(),
   difficulty: z.preprocess((val) => Number(val), z.number().int()),
 });
 
 export function AddTaskDialog() {
+  const taskFirestoreService = new TasksFirestoreService();
+  const firebaseAuth = new FirebaseAuth();
   const [open, setOpen] = useState(false);
-
   const taskForm = useForm<z.input<typeof taskSchema>>({
     resolver: zodResolver(taskSchema),
   });
 
-  const { user } = useAuth();
-
   const onSubmit = async (values: z.input<typeof taskSchema>) => {
     const { title, dueDate, weight, description, difficulty } =
       taskSchema.parse(values);
+
     try {
-      const taskCollection = collection(db, "tasks");
+      const me = firebaseAuth.me();
+      if (!me) return;
 
       const task = new Task(
-        user?.uid || "",
+        me.uid,
         dueDate,
-        difficulty,
-        weight,
+        difficulty as TaskDifficulty,
+        weight as TaskWeight,
         [],
         title,
         description,
         [],
       );
+      await taskFirestoreService.create<Task>(task.asObject() as any);
 
-      await addDoc(taskCollection, task.asObject());
       setOpen(false);
     } catch (error: any) {
       console.error("Error adding task: ", error);
@@ -85,7 +87,7 @@ export function AddTaskDialog() {
         <DialogHeader>
           <DialogTitle>Create new task</DialogTitle>
         </DialogHeader>
-
+        <button onClick={() => firebaseAuth.me()}>Click me</button>
         <Form {...taskForm}>
           <form
             className="flex flex-col gap-4"

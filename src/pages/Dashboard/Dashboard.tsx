@@ -6,15 +6,19 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect } from "react";
 import { Task } from "@/models";
 import { useAuth } from "@/features/auth/authContext";
+import { COLLECTIONS } from "@/constants/firestore.constants";
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const { user } = useAuth();
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const tasksCollection = collection(db, "tasks");
-        const q = query(tasksCollection, where("owner", "==", user?.uid));
+        if (!user) return;
+
+        const tasksCollection = collection(db, COLLECTIONS.TASKS);
+        const q = query(tasksCollection, where("owner", "==", user.uid));
         const querySnapshot = await getDocs(q);
         const tasksData = querySnapshot.docs.map((doc) => ({
           ...doc.data(),

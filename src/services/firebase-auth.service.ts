@@ -1,3 +1,4 @@
+import { COLLECTIONS } from "@/constants/firestore.constants";
 import { auth } from "@/main";
 import { db } from "@/main";
 import { User } from "@/models";
@@ -21,7 +22,7 @@ class FirebaseAuth {
       const { user } = await signInWithEmailAndPassword(
         this.auth,
         email,
-        password
+        password,
       );
       return user;
     } catch (error) {
@@ -45,23 +46,28 @@ class FirebaseAuth {
     firstName: string,
     lastName: string,
     email: string,
-    password: string
+    password: string,
   ) {
     try {
       const { user } = await createUserWithEmailAndPassword(
         this.auth,
         email,
-        password
+        password,
       );
 
       const newUser = new User(email, firstName, lastName);
 
-      const userDoc = doc(db, "users", user.uid);
+      const userDoc = doc(db, COLLECTIONS.USERS, user.uid);
       await setDoc(userDoc, newUser.asObject());
       return user;
     } catch (error) {
       console.error("error = ", error);
     }
+  }
+
+  me() {
+    console.log(this.auth.currentUser);
+    return this.auth.currentUser;
   }
 }
 
