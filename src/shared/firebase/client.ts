@@ -17,4 +17,12 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 // useLocalStorage
 
+// language , theme
+
+// useInitApp()  grabs things from local storage
+
+// recoil state management
+
+//
+
 export default firebaseApp;
