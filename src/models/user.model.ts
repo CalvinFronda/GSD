@@ -8,10 +8,10 @@ class User {
   updatedAt: string; // isostring
   deletedAt: string | null; // starts off at null
 
-  constructor(email: string) {
+  constructor(email: string, firstName: string, lastName: string) {
     this.email = email;
-    this.firstName = null;
-    this.lastName = null;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.photo = null;
     this.points = 0;
     this.createdAt = new Date().toISOString();

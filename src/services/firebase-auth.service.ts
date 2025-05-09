@@ -1,5 +1,6 @@
 import { auth } from "@/main";
 import { db } from "@/main";
+import { User } from "@/models";
 import {
   Auth,
   signInWithEmailAndPassword,
@@ -20,7 +21,7 @@ class FirebaseAuth {
       const { user } = await signInWithEmailAndPassword(
         this.auth,
         email,
-        password,
+        password
       );
       return user;
     } catch (error) {
@@ -44,28 +45,19 @@ class FirebaseAuth {
     firstName: string,
     lastName: string,
     email: string,
-    password: string,
+    password: string
   ) {
     try {
       const { user } = await createUserWithEmailAndPassword(
         this.auth,
         email,
-        password,
+        password
       );
-      const newUser = {
-        uid: user.uid,
-        email,
-        firstName,
-        lastName,
-        photo: null,
-        points: 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        deletedAt: null,
-      };
+
+      const newUser = new User(email, firstName, lastName);
 
       const userDoc = doc(db, "users", user.uid);
-      await setDoc(userDoc, newUser);
+      await setDoc(userDoc, newUser.asObject());
       return user;
     } catch (error) {
       console.error("error = ", error);
