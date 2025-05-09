@@ -35,6 +35,12 @@ const Signup = ({ className, ...props }: React.ComponentProps<"div">) => {
   const navigate = useNavigate();
   const signUpForm = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    },
   });
 
   const handleSignup = async (values: z.infer<typeof signUpSchema>) => {

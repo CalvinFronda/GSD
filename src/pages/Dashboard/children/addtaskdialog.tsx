@@ -50,6 +50,13 @@ export function AddTaskDialog() {
   const [open, setOpen] = useState(false);
   const taskForm = useForm<z.input<typeof taskSchema>>({
     resolver: zodResolver(taskSchema),
+    defaultValues: {
+      title: "",
+      dueDate: "",
+      weight: "1",
+      description: "",
+      difficulty: "easy",
+    },
   });
 
   const onSubmit = async (values: z.input<typeof taskSchema>) => {
@@ -68,7 +75,7 @@ export function AddTaskDialog() {
         [],
         title,
         description,
-        [],
+        []
       );
       await taskFirestoreService.create<Task>(task.asObject() as any);
 
@@ -87,7 +94,6 @@ export function AddTaskDialog() {
         <DialogHeader>
           <DialogTitle>Create new task</DialogTitle>
         </DialogHeader>
-        <button onClick={() => firebaseAuth.me()}>Click me</button>
         <Form {...taskForm}>
           <form
             className="flex flex-col gap-4"

@@ -34,6 +34,10 @@ export function LoginForm({
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   const navigate = useNavigate();
