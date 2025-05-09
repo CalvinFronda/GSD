@@ -5,21 +5,60 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../../components/ui/card";
+} from "@/components/ui/card";
 import { Button } from "../../../components/ui/button";
 import type { Task } from "@/models";
-export enum TaskStatus {
-  NOT_STRTED = "NOT_STARTED",
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
+import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
+import { TaskStatus } from "@/types";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Settings } from "lucide-react";
+import { useUIStore } from "@/hooks/useUiStore";
+
+interface TaskCardProps {
+  task: Task;
 }
 
-const isCompleted = (status: TaskStatus) => status === TaskStatus.COMPLETED;
-// TODO
-const TaskCard = ({ task }: { task: Task }) => {
+const isCompleted = (status: TaskStatus) =>
+  status === TASK_STATUS_TYPE.COMPLETED;
+/**
+ * TODO:
+ * Edit a task
+ * Duplicate
+ * Archive
+ * Delete
+ */
+const TaskCard = ({ task }: TaskCardProps) => {
   const { content, status, difficulty } = task;
+
+  const { openTaskDialog } = useUIStore();
+
   return (
-    <Card className="min-h-80  min-w-80">
+    <Card className="min-h-80 min-w-80 relative">
+      <div className="absolute top-4 right-4 z-10">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Settings className="h-4 w-4" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => openTaskDialog(task)}>
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+            <DropdownMenuItem>Archive</DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive">
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <CardHeader>
         <CardTitle>{content.title}</CardTitle>
         <CardDescription className="max-h-35 overflow-y-auto">

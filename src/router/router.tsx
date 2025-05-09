@@ -2,8 +2,8 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import HomePage from "@/pages/Home/Home";
 import LoginPage from "@/pages/Auth/Login";
-import Layout from "@/widgets/Layout/Layout";
-import AuthLayout from "@/widgets/Layout/AuthLayout";
+import Layout from "@/components/layout/Layout";
+import AuthLayout from "@/components/layout/AuthLayout";
 import Signup from "@/pages/Auth/Signup";
 import { ProtectedRoute } from "./protectedRoute";
 import Dashboard from "@/pages/Dashboard/Dashboard";

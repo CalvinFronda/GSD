@@ -62,7 +62,7 @@ class FirestoreService {
    *   CREATE method -> create new document depending on collection
    * */
 
-  async create<T>(payload: Promise<T>) {
+  async create<T extends DocumentData>(payload: T) {
     try {
       const add = await addDoc(this.collection, payload);
       return add;
@@ -80,6 +80,7 @@ class FirestoreService {
   async update<T>(id: string, payload: Partial<T>) {
     try {
       const docRef = doc(this.db, this.collectionName, id);
+      console.log("payload in update", payload);
       await updateDoc(docRef, payload as DocumentData);
       return true;
     } catch (error) {
