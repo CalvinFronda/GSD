@@ -53,7 +53,7 @@ export function TaskDialog() {
           [],
           title,
           description,
-          []
+          [],
         );
         await taskFirestoreService.create(task.asObject());
       }

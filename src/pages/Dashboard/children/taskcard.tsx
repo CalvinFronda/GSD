@@ -35,7 +35,7 @@ const TaskCard = ({ task }: { task: TaskType }) => {
   const { content, status, difficulty } = task;
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const { openTaskDialog, deleteTask } = useTaskStore();
+  const { openTaskDialog, deleteTask, archiveTask } = useTaskStore();
 
   const handleDeleteTask = () => {
     if (task?.id) {
@@ -60,7 +60,9 @@ const TaskCard = ({ task }: { task: TaskType }) => {
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem>Duplicate</DropdownMenuItem>
-              <DropdownMenuItem>Archive</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => archiveTask(task?.id)}>
+                Archive
+              </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-destructive"
                 onClick={() => setShowDeleteDialog(true)}
