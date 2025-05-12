@@ -24,18 +24,13 @@ import { TaskType } from "@/hooks/useTaskStore";
 
 const isCompleted = (status: TaskStatus) =>
   status === TASK_STATUS_TYPE.COMPLETED;
-/**
- * TODO:
- * Edit a task :check
- * Duplicate
- * Archive
- * Delete :check
- */
+
 const TaskCard = ({ task }: { task: TaskType }) => {
   const { content, status, difficulty } = task;
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const { openTaskDialog, deleteTask, archiveTask } = useTaskStore();
+  const { openTaskDialog, deleteTask, archiveTask, duplicateTask } =
+    useTaskStore();
 
   const handleDeleteTask = () => {
     if (task?.id) {
@@ -46,7 +41,7 @@ const TaskCard = ({ task }: { task: TaskType }) => {
 
   return (
     <>
-      <Card className="min-h-80 min-w-80 relative">
+      <Card className="min-h-80 min-w-80 relative ">
         <div className="absolute top-4 right-4 z-10">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -59,8 +54,10 @@ const TaskCard = ({ task }: { task: TaskType }) => {
               <DropdownMenuItem onClick={() => openTaskDialog(task)}>
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem>Duplicate</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => archiveTask(task?.id)}>
+              <DropdownMenuItem onClick={() => duplicateTask(task)}>
+                Duplicate
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => archiveTask(task)}>
                 Archive
               </DropdownMenuItem>
               <DropdownMenuItem

@@ -10,18 +10,24 @@ export interface TaskType extends Task {
 
 type TaskStore = {
   tasks: TaskType[];
-  fetchTasks: (userId: string) => void;
-  deleteTask: (taskId: string) => void;
-  archiveTask: (taskId: string) => void;
   isTaskDialogOpen: boolean;
   selectedTask: TaskType | null;
   dialogMode: "create" | "edit";
+  fetchTasks: (userId: string) => void;
+  deleteTask: (taskId: string) => void;
+  archiveTask: (taskId: TaskType) => void;
+  duplicateTask: (taskId: TaskType) => void;
   openTaskDialog: (task?: Task) => void;
   closeTaskDialog: () => void;
 };
 
+const now = new Date().toISOString();
+
 export const useTaskStore = create<TaskStore>((set, get) => ({
   tasks: [],
+  isTaskDialogOpen: false,
+  selectedTask: null,
+  dialogMode: "create",
   fetchTasks: async (userId) => {
     const service = new TasksFirestoreService();
     const data = await service.getTasksByOwner(userId);
@@ -31,17 +37,29 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
     const service = new TasksFirestoreService();
     return await service.deleteTaskById(taskId);
   },
-  archiveTask: async (taskId) => {
+  archiveTask: async (task) => {
     const service = new TasksFirestoreService();
-    const now = new Date().toISOString();
-    return await service.update(taskId, {
-      updatedAt: now,
-      status: TASK_STATUS_TYPE.ARCHIVED,
-    });
+    if (task.id) {
+      return await service.update(task.id, {
+        updatedAt: now,
+        status: TASK_STATUS_TYPE.ARCHIVED,
+      });
+    }
   },
-  isTaskDialogOpen: false,
-  selectedTask: null,
-  dialogMode: "create",
+  duplicateTask: async (task) => {
+    const service = new TasksFirestoreService();
+
+    const { id, createdAt, ...rest } = task;
+    const newTask = {
+      ...rest,
+      content: {
+        title: task.content.title + " (copy)",
+      },
+      createdAt: now,
+    };
+
+    await service.create(newTask);
+  },
   openTaskDialog: (task) =>
     set({
       isTaskDialogOpen: true,
