@@ -9,11 +9,15 @@ class TasksFirestoreService extends FirestoreService {
   }
 
   async getTasksByOwner(ownerId: string): Promise<Task[]> {
-    return this.queryDocs<Task>([where("owner", "==", ownerId)]);
+    return this.queryDocs<Task>([
+      where("owner", "==", ownerId),
+      where("deletedAt", "==", null),
+    ]);
   }
 
   async deleteTaskById(taskId: string) {
-    return this.delete(taskId);
+    const now = new Date().toISOString();
+    return this.update(taskId, { deletedAt: now, updatedAt: now });
   }
 }
 
