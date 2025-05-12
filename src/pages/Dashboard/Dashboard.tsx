@@ -1,31 +1,15 @@
-import { useState } from "react";
 import { TaskDialog } from "@/pages/Dashboard/children/addtaskdialog";
 import TaskCard from "@/pages/Dashboard/children/taskcard";
 import { useEffect } from "react";
-import { Task } from "@/models";
 import { useAuth } from "@/features/auth/authContext";
-
-import TasksFirestoreService from "@/services/db/tasks.firestore.service";
+import { useTaskStore } from "@/hooks/useTaskStore";
 
 export default function Dashboard() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-
+  const { tasks, fetchTasks } = useTaskStore();
   const { user } = useAuth();
-  const tasksFirestoreService = new TasksFirestoreService();
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        if (!user) return;
-
-        const taskData = await tasksFirestoreService.getTasksByOwner(user.uid);
-
-        setTasks(taskData as Task[]);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
-    };
-    fetchTasks();
+    if (user) fetchTasks(user.uid);
   }, []);
 
   return (

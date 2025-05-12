@@ -17,9 +17,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Settings } from "lucide-react";
-import { useUIStore } from "@/hooks/useUiStore";
+import { useTaskStore } from "@/hooks/useTaskStore";
 
-interface TaskCardProps {
+export interface TaskCardProps {
   task: Task;
 }
 
@@ -27,7 +27,7 @@ const isCompleted = (status: TaskStatus) =>
   status === TASK_STATUS_TYPE.COMPLETED;
 /**
  * TODO:
- * Edit a task
+ * Edit a task :check
  * Duplicate
  * Archive
  * Delete
@@ -35,8 +35,8 @@ const isCompleted = (status: TaskStatus) =>
 const TaskCard = ({ task }: TaskCardProps) => {
   const { content, status, difficulty } = task;
 
-  const { openTaskDialog } = useUIStore();
-
+  const { openTaskDialog } = useTaskStore();
+  console.log(content);
   return (
     <Card className="min-h-80 min-w-80 relative">
       <div className="absolute top-4 right-4 z-10">

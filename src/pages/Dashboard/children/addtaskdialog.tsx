@@ -14,15 +14,15 @@ import TasksFirestoreService from "@/services/db/tasks.firestore.service";
 import FirebaseAuth from "@/services/firebase-auth.service";
 import TaskForm from "./taskform";
 import { taskSchema } from "./taskform";
-import { useUIStore } from "@/hooks/useUiStore";
+import { useTaskStore } from "@/hooks/useTaskStore";
 
 export function TaskDialog() {
   const taskFirestoreService = new TasksFirestoreService();
   const firebaseAuth = new FirebaseAuth();
 
   const { selectedTask, isTaskDialogOpen, openTaskDialog, closeTaskDialog } =
-    useUIStore();
-  console.log("selectedTask", selectedTask);
+    useTaskStore();
+
   const onSubmit = async (values: z.input<typeof taskSchema>) => {
     const { title, dueDate, weight, description, difficulty } =
       taskSchema.parse(values);
@@ -53,7 +53,7 @@ export function TaskDialog() {
           [],
           title,
           description,
-          []
+          [],
         );
         await taskFirestoreService.create(task.asObject());
       }
