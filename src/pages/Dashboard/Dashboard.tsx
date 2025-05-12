@@ -10,7 +10,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (user) fetchTasks(user.uid);
-  }, []);
+  }, [tasks]);
 
   return (
     <div className="flex flex-col gap-4  px-4 lg:px-6 py-28">

@@ -80,7 +80,7 @@ class FirestoreService {
   async update<T>(id: string, payload: Partial<T>) {
     try {
       const docRef = doc(this.db, this.collectionName, id);
-      console.log("payload in update", payload);
+
       await updateDoc(docRef, payload as DocumentData);
       return true;
     } catch (error) {
@@ -92,7 +92,7 @@ class FirestoreService {
   /**
    * DELETE -> requires document id
    */
-  async delete(id: string) {
+  async delete(id: string): Promise<boolean> {
     try {
       const docRef = doc(this.db, this.collectionName, id);
       await deleteDoc(docRef);

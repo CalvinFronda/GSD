@@ -11,6 +11,10 @@ class TasksFirestoreService extends FirestoreService {
   async getTasksByOwner(ownerId: string): Promise<Task[]> {
     return this.queryDocs<Task>([where("owner", "==", ownerId)]);
   }
+
+  async deleteTaskById(taskId: string) {
+    return this.delete(taskId);
+  }
 }
 
 export default TasksFirestoreService;

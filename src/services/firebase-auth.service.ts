@@ -31,7 +31,6 @@ class FirebaseAuth {
     }
   }
 
-  // TODO: signOut()
   async signOut() {
     try {
       await signOut(this.auth);
@@ -41,7 +40,6 @@ class FirebaseAuth {
     }
   }
 
-  // TODO: createUser()
   async createUser(
     firstName: string,
     lastName: string,
