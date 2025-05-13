@@ -21,6 +21,7 @@ export const AppRouter = () => (
 
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard/inbox" element={<Dashboard />} />
+          <Route path="/dashboard/action" element={<h1>Action</h1>} />
           <Route path="/dashboard/projects" element={<h1>Project</h1>} />
         </Route>
       </Routes>

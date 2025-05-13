@@ -42,8 +42,9 @@ export function TaskDialog() {
           weight: weight as TaskWeight,
           updatedAt: new Date().toISOString(),
         };
-
-        await taskFirestoreService.update(selectedTask.id, updatedTask);
+        if (selectedTask.id) {
+          await taskFirestoreService.update(selectedTask.id, updatedTask);
+        }
       } else {
         const task = new Task(
           me.uid,
@@ -72,7 +73,7 @@ export function TaskDialog() {
       <DialogTrigger asChild>
         <Button variant="outline">New Task</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>{selectedTask ? "Edit" : "Create new"} task</DialogTitle>
         </DialogHeader>

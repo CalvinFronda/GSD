@@ -16,7 +16,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 import { Settings } from "lucide-react";
+
 import { useTaskStore } from "@/store/useTaskStore";
 import AlertDialogButton from "@/components/layout/AlertDialog";
 import { useState } from "react";
@@ -41,7 +43,7 @@ const TaskCard = ({ task }: { task: TaskType }) => {
 
   return (
     <>
-      <Card className="min-h-80 min-w-80 relative ">
+      <Card className="min-h-80 min-w-80 relative flex flex-col justify-between p-6">
         <div className="absolute top-4 right-4 z-10">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -69,23 +71,24 @@ const TaskCard = ({ task }: { task: TaskType }) => {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <CardHeader>
-          <CardTitle>{content.title}</CardTitle>
-          <CardDescription className="max-h-35 overflow-y-auto">
-            {content.description}
-          </CardDescription>
+
+        <CardHeader className="space-y-4 px-0 pt-0">
+          <CardTitle className="min-h-10  pr-3">{content.title}</CardTitle>
           <CardDescription>
-            <div className="flex flex-row gap-2">
-              <span> {isCompleted(status) ? "done" : "not done"} status</span>
-              <span>difficulty: {difficulty}</span>
+            <div className="flex flex-row gap-4">
+              <Badge>Status: {isCompleted(status) ? "Done" : "Not Done"}</Badge>
+              <Badge>Difficulty: {difficulty}</Badge>
             </div>
           </CardDescription>
         </CardHeader>
-        <CardContent>{/* <div>some random context</div> */}</CardContent>
-        <CardFooter>
-          <Button>Complete Task</Button>
+
+        <CardContent className="flex-1 px-0">{content.description}</CardContent>
+
+        <CardFooter className=" pt-4 px-0 pb-0">
+          <Button className="w-full">Complete Task</Button>
         </CardFooter>
       </Card>
+
       <AlertDialogButton
         open={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}
