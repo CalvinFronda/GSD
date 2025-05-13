@@ -6,7 +6,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
   createUserWithEmailAndPassword,
-  updateProfile,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
@@ -22,7 +21,7 @@ class FirebaseAuth {
       const { user } = await signInWithEmailAndPassword(
         this.auth,
         email,
-        password
+        password,
       );
       return user;
     } catch (error) {
@@ -44,17 +43,14 @@ class FirebaseAuth {
     firstName: string,
     lastName: string,
     email: string,
-    password: string
+    password: string,
   ) {
     try {
       const { user } = await createUserWithEmailAndPassword(
         this.auth,
         email,
-        password
+        password,
       );
-      await updateProfile(user, {
-        displayName: `${firstName} ${lastName}`,
-      });
       const newUser = new User(email, firstName, lastName);
 
       const userDoc = doc(db, COLLECTIONS.USERS, user.uid);

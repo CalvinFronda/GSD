@@ -15,14 +15,17 @@ import { getUserInitals } from "@/lib/utils";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { user, isLoading } = useAuth();
+  const { isLoading, userData } = useAuth();
   const handleLogout = async () => {
     await signOut(auth);
   };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  const userIcon = user?.displayName ? getUserInitals(user?.displayName) : "JD";
+
+  const userIcon =
+    userData && getUserInitals(userData?.firstName, userData?.lastName);
 
   return (
     <header className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between bg-gray-700 text-white px-8 py-4 rounded-xl shadow-lg">
