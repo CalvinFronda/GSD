@@ -17,10 +17,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Settings } from "lucide-react";
-import { useTaskStore } from "@/hooks/useTaskStore";
+import { useTaskStore } from "@/store/useTaskStore";
 import AlertDialogButton from "@/components/layout/AlertDialog";
 import { useState } from "react";
-import { TaskType } from "@/hooks/useTaskStore";
+import { TaskType } from "@/store/useTaskStore";
 
 const isCompleted = (status: TaskStatus) =>
   status === TASK_STATUS_TYPE.COMPLETED;
