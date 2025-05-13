@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getUserInitals } from "@/lib/utils";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -21,8 +22,8 @@ export default function Header() {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  const userIcon = user?.displayName;
-  // TODO: get uuId get to users full name
+  const userIcon = user?.displayName ? getUserInitals(user?.displayName) : "JD";
+
   return (
     <header className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between bg-gray-700 text-white px-8 py-4 rounded-xl shadow-lg">
       <div className="flex-1 flex justify-center space-x-6">
@@ -46,9 +47,7 @@ export default function Header() {
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar className="w-10 h-10">
-              <AvatarFallback className="text-black">
-                {userIcon ? userIcon[0].toUpperCase() : "JD"}
-              </AvatarFallback>
+              <AvatarFallback className="text-black">{userIcon}</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent>

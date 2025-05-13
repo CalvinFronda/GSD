@@ -22,13 +22,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       try {
         if (firebaseUser) {
-          // TODO
-          console.log("USER IS LOGGED IN");
-          // if user exists in firestore
-          // getDoc**
-          // if not create user in firestore
-          // else do nothing ( or add field to Usermodel called lastSeenAt and updated that as well as updatedAt)
-
           setUser(firebaseUser);
         } else {
           console.log("USER IS LOGGED OUT");
