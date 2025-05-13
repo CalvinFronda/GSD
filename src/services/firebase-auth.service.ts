@@ -1,6 +1,5 @@
 import { COLLECTIONS } from "@/constants/firestore.constants";
-import { auth } from "@/main";
-import { db } from "@/main";
+import { db, auth } from "@/shared/firebase/client";
 import { User } from "@/models";
 import {
   Auth,
@@ -22,7 +21,7 @@ class FirebaseAuth {
       const { user } = await signInWithEmailAndPassword(
         this.auth,
         email,
-        password,
+        password
       );
       return user;
     } catch (error) {
@@ -44,13 +43,13 @@ class FirebaseAuth {
     firstName: string,
     lastName: string,
     email: string,
-    password: string,
+    password: string
   ) {
     try {
       const { user } = await createUserWithEmailAndPassword(
         this.auth,
         email,
-        password,
+        password
       );
 
       const newUser = new User(email, firstName, lastName);
