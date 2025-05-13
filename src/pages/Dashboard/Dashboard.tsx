@@ -2,7 +2,7 @@ import { TaskDialog } from "@/pages/Dashboard/children/addtaskdialog";
 import TaskCard from "@/pages/Dashboard/children/taskcard";
 import { useEffect } from "react";
 import { useAuth } from "@/features/auth/authContext";
-import { useTaskStore } from "@/hooks/useTaskStore";
+import { useTaskStore } from "@/store/useTaskStore";
 
 export default function Dashboard() {
   const { tasks, fetchTasks } = useTaskStore();

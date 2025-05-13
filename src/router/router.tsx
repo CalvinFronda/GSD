@@ -1,4 +1,3 @@
-// app/providers/router.tsx
 import { BrowserRouter, Routes, Route } from "react-router";
 import HomePage from "@/pages/Home/Home";
 import LoginPage from "@/pages/Auth/Login";

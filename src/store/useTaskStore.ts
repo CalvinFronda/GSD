@@ -8,7 +8,7 @@ export interface TaskType extends Task {
   id?: string;
 }
 
-type TaskStore = {
+type TaskStoreTypes = {
   tasks: TaskType[];
   isTaskDialogOpen: boolean;
   selectedTask: TaskType | null;
@@ -23,7 +23,7 @@ type TaskStore = {
 
 const now = new Date().toISOString();
 
-export const useTaskStore = create<TaskStore>((set, get) => ({
+export const useTaskStore = create<TaskStoreTypes>((set) => ({
   tasks: [],
   isTaskDialogOpen: false,
   selectedTask: null,

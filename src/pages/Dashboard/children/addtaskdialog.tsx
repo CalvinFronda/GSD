@@ -14,7 +14,7 @@ import TasksFirestoreService from "@/services/db/tasks.firestore.service";
 import FirebaseAuth from "@/services/firebase-auth.service";
 import TaskForm from "./taskform";
 import { taskSchema } from "./taskform";
-import { useTaskStore } from "@/hooks/useTaskStore";
+import { useTaskStore } from "@/store/useTaskStore";
 
 export function TaskDialog() {
   const taskFirestoreService = new TasksFirestoreService();

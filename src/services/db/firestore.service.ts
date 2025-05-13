@@ -1,4 +1,4 @@
-import { db } from "@/main";
+import { db } from "@/shared/firebase/client";
 import {
   CollectionReference,
   Firestore,

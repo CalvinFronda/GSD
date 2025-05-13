@@ -1,4 +1,9 @@
+import { useState, useEffect } from "react";
+
 import { initializeApp } from "firebase/app";
+import { User } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -10,19 +15,86 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+interface AppSettings {
+  theme: "light" | "dark";
+  language: string;
+  lastVisited: string;
+}
+
 const firebaseApp = initializeApp(firebaseConfig);
-// make this into a hook
+const db = getFirestore(firebaseApp);
+const auth = getAuth(firebaseApp);
 
-// useInitFirebase()
+const defaultSettings = {
+  theme: "light",
+  language: "en",
+  lastVisited: new Date().toISOString(),
+};
 
-// useLocalStorage
+/**
+ Initializes Firebase authentication and app settings.
+ * 
+ * - Tracks global auth state (user, loading)
+ * - Loads settings from localStorage if available
+ * - Persists updated settings to localStorage
+ */
+function useInitFirebase() {
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-// language , theme
+  const [settings, setSettings] = useState<AppSettings>(() => {
+    const savedSettings = localStorage.getItem("appSettings");
+    return savedSettings ? JSON.parse(savedSettings) : defaultSettings;
+  });
 
-// useInitApp()  grabs things from local storage
+  useEffect(() => {
+    // Listen for authentication state changes
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setUser(firebaseUser);
+        setIsLoading(false);
+      }
+    });
+    // Save settings to localStorage whenever they change
+    localStorage.setItem("appSettings", JSON.stringify(settings));
+    return () => unsubscribe();
+  }, []);
 
-// recoil state management
+  // Update settings
+  const updateSettings = (newSettings: Partial<AppSettings>) => {
+    setSettings((prev) => ({
+      ...prev,
+      ...newSettings,
+      lastVisited: new Date().toISOString(),
+    }));
+  };
 
-//
+  return { user, isLoading, settings, updateSettings };
+}
 
-export default firebaseApp;
+/**
+ * Sets global HTML attributes based on app settings.
+ *
+ * - Applies theme and language to <html> tag
+ * - Depends on settings initialized from Firebase
+ */
+function useInitApp() {
+  const { user, isLoading, settings, updateSettings } = useInitFirebase();
+
+  useEffect(() => {
+    // Set initial theme
+    document.documentElement.setAttribute("data-theme", settings.theme);
+
+    // Set initial language
+    document.documentElement.setAttribute("lang", settings.language);
+  }, [settings]);
+
+  return {
+    isLoading,
+    user,
+    settings,
+    updateSettings,
+  };
+}
+
+export { firebaseApp, db, auth, useInitApp, useInitFirebase };
