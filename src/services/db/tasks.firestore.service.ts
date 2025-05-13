@@ -15,7 +15,7 @@ class TasksFirestoreService extends FirestoreService {
       where("status", "in", [
         TASK_STATUS_TYPE.COMPLETED,
         TASK_STATUS_TYPE.IN_PROGRESS,
-        TASK_STATUS_TYPE.NOT_STRTED,
+        TASK_STATUS_TYPE.NOT_STARTED,
       ]),
     ]);
   }

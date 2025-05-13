@@ -3,7 +3,9 @@ import { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { User } from "firebase/auth";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
+
+import { UserDataType } from "@/types";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -40,6 +42,7 @@ const defaultSettings = {
  */
 function useInitFirebase() {
   const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<UserDataType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [settings, setSettings] = useState<AppSettings>(() => {
@@ -49,9 +52,19 @@ function useInitFirebase() {
 
   useEffect(() => {
     // Listen for authentication state changes
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser);
+
+        try {
+          const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+          if (userDoc.exists()) {
+            setUserData(userDoc.data() as UserDataType);
+          }
+        } catch (error) {
+          console.log("Error fetching user data:", error);
+        }
+
         setIsLoading(false);
       }
     });
@@ -69,7 +82,7 @@ function useInitFirebase() {
     }));
   };
 
-  return { user, isLoading, settings, updateSettings };
+  return { user, userData, isLoading, settings, updateSettings };
 }
 
 /**
@@ -79,7 +92,8 @@ function useInitFirebase() {
  * - Depends on settings initialized from Firebase
  */
 function useInitApp() {
-  const { user, isLoading, settings, updateSettings } = useInitFirebase();
+  const { user, userData, isLoading, settings, updateSettings } =
+    useInitFirebase();
 
   useEffect(() => {
     // Set initial theme
@@ -92,6 +106,7 @@ function useInitApp() {
   return {
     isLoading,
     user,
+    userData,
     settings,
     updateSettings,
   };

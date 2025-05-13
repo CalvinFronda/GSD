@@ -9,7 +9,7 @@ import {
 
 import { z } from "zod";
 import { Task } from "@/models";
-import { TaskDifficulty, TaskWeight } from "@/types";
+import { TaskDifficulty, TaskWeight } from "@/types/index";
 import TasksFirestoreService from "@/services/db/tasks.firestore.service";
 import FirebaseAuth from "@/services/firebase-auth.service";
 import TaskForm from "./taskform";
