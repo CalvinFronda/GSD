@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Define column type
+
 import {
   DndContext,
   DragOverlay,
@@ -13,21 +14,13 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 
 import { SortableItem } from "./sortable-item";
-import { TaskCard } from "./task-card";
+import TaskCard from "@/pages/Dashboard/children/taskcard";
 import { DroppableColumn } from "./droppable-column";
 import { useTaskStore } from "@/store/useTaskStore";
+import { Task } from "@/models";
 import { TaskDialog } from "../Dashboard/children/addtaskdialog";
+import { useAuth } from "@/features/auth/authContext";
 
-// Define task type
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  priority: "low" | "medium" | "high";
-  createdAt: Date;
-}
-
-// Define column type
 interface Column {
   id: string;
   title: string;
@@ -38,12 +31,6 @@ interface Column {
 export default function GTDDashboard() {
   // Initial columns based on GTD workflow
   const [columns, setColumns] = useState<Column[]>([
-    {
-      id: "capture",
-      title: "Capture",
-      description: "Collect what has your attention",
-      tasks: [],
-    },
     {
       id: "clarify",
       title: "Clarify",
@@ -71,9 +58,96 @@ export default function GTDDashboard() {
   ]);
 
   const [activeTask, setActiveTask] = useState<Task | null>(null);
-  const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
-  const { openTaskDialog, deleteTask, archiveTask, duplicateTask } =
-    useTaskStore();
+  const { tasks, fetchTasks } = useTaskStore();
+  const { user } = useAuth();
+  // Process tasks and distribute them to the appropriate columns
+  useEffect(() => {
+    // Fetch tasks when component mounts
+    if (user) fetchTasks();
+  }, []);
+
+  // Update columns whenever tasks change
+  useEffect(() => {
+    if (!tasks || tasks.length === 0) return;
+
+    const categorizedTasks = distributeTasksToColumns(tasks);
+
+    setColumns((prevColumns) => {
+      return prevColumns.map((column) => ({
+        ...column,
+        tasks: categorizedTasks[column.id] || [],
+      }));
+    });
+  }, [tasks]);
+
+  // Function to distribute tasks to the appropriate columns
+  const distributeTasksToColumns = (tasks: Task[]) => {
+    const categorizedTasks: Record<string, Task[]> = {
+      clarify: [],
+      organize: [],
+      reflect: [],
+      engage: [],
+    };
+
+    tasks.forEach((task) => {
+      // Check if the task has any null or empty required fields
+      if (hasNullFields(task)) {
+        categorizedTasks.clarify.push(task);
+      }
+      // Check if task status is NOT_STARTED and not completed or deleted
+      else if (
+        task.status === "NOT_STARTED" &&
+        task.completedAt === null &&
+        task.deletedAt === null
+      ) {
+        categorizedTasks.organize.push(task);
+      }
+      // If task doesn't meet above criteria, you might want to add logic for other columns
+      // For now, let's put them in capture as a fallback
+      else {
+        categorizedTasks.clarify.push(task);
+      }
+    });
+
+    return categorizedTasks;
+  };
+
+  // Helper function to check if a task has any null required fields
+  const hasNullFields = (task: Task) => {
+    // Check top-level required fields
+    const topLevelRequiredFields = [
+      "id",
+      "status",
+      "dueDate",
+      "difficulty",
+      "weight",
+    ];
+
+    // Check for null/empty top-level fields
+    const hasNullTopLevelFields = topLevelRequiredFields.some(
+      (field) =>
+        task[field as keyof Task] === null ||
+        task[field as keyof Task] === undefined ||
+        task[field as keyof Task] === ""
+    );
+
+    if (hasNullTopLevelFields) return true;
+
+    // Check for null/empty content fields
+    if (!task.content) return true;
+
+    const contentRequiredFields = ["title", "description"];
+
+    const hasNullContentFields = contentRequiredFields.some(
+      (field) =>
+        !task.content ||
+        task.content[field as keyof typeof task.content] === null ||
+        task.content[field as keyof typeof task.content] === undefined ||
+        task.content[field as keyof typeof task.content] === ""
+    );
+
+    return hasNullContentFields;
+  };
 
   // Set up sensors for drag and drop
   const sensors = useSensors(
@@ -110,14 +184,12 @@ export default function GTDDashboard() {
 
     if (task) {
       setActiveTask(task);
-      setActiveColumnId(findTask(active.id as string).columnId);
     }
   };
 
   // Handle drag over
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
-    console.log("active drag", active);
     if (!over) return;
 
     const activeId = active.id as string;
@@ -125,7 +197,6 @@ export default function GTDDashboard() {
 
     // Find the active task and its column
     const { task: activeTask, columnId: activeColumnId } = findTask(activeId);
-    console.log("activeTask", activeTask);
     if (!activeTask || !activeColumnId) return;
 
     // Check if over is a column
@@ -217,7 +288,6 @@ export default function GTDDashboard() {
   // Handle drag end
   const handleDragEnd = () => {
     setActiveTask(null);
-    setActiveColumnId(null);
   };
 
   // Get priority badge color
@@ -235,7 +305,7 @@ export default function GTDDashboard() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col gap-4  px-4 lg:px-6 py-28">
+    <div className="flex min-h-screen flex-col gap-4 px-4 lg:px-6 py-28">
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mb-4 flex flex-col">
           <h2 className="text-xl font-semibold">Your Tasks</h2>
@@ -268,10 +338,12 @@ export default function GTDDashboard() {
                     >
                       {column.tasks.map((task) => (
                         <SortableItem key={task.id} id={task.id}>
-                          <TaskCard
-                            task={task}
-                            getPriorityColor={getPriorityColor}
-                          />
+                          <div className="cursor-grab active:cursor-grabbing">
+                            <TaskCard
+                              task={task}
+                              getPriorityColor={getPriorityColor}
+                            />
+                          </div>
                         </SortableItem>
                       ))}
                       {column.tasks.length === 0 && (
@@ -289,11 +361,13 @@ export default function GTDDashboard() {
               {/* Drag overlay for the currently dragged item */}
               <DragOverlay>
                 {activeTask ? (
-                  <TaskCard
-                    task={activeTask}
-                    getPriorityColor={getPriorityColor}
-                    isDragging
-                  />
+                  <div className="cursor-grabbing">
+                    <TaskCard
+                      task={activeTask}
+                      getPriorityColor={getPriorityColor}
+                      isDragging
+                    />
+                  </div>
                 ) : null}
               </DragOverlay>
             </DndContext>
