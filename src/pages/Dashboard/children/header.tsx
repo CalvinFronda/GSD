@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/features/auth/authContext";
 import { signOut } from "firebase/auth";
-import { auth } from "@/main";
+import { auth } from "@/shared/firebase/client";
 import { DropdownMenu } from "../../../components/ui/dropdown-menu";
 import {
   DropdownMenuContent,

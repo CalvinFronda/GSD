@@ -1,6 +1,5 @@
 import { COLLECTIONS } from "@/constants/firestore.constants";
-import { auth } from "@/main";
-import { db } from "@/main";
+import { db, auth } from "@/shared/firebase/client";
 import { User } from "@/models";
 import {
   Auth,
@@ -31,7 +30,6 @@ class FirebaseAuth {
     }
   }
 
-  // TODO: signOut()
   async signOut() {
     try {
       await signOut(this.auth);
@@ -41,7 +39,6 @@ class FirebaseAuth {
     }
   }
 
-  // TODO: createUser()
   async createUser(
     firstName: string,
     lastName: string,

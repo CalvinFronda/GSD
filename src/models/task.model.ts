@@ -25,7 +25,7 @@ class Task {
     labels: string[],
     title: string,
     description: string,
-    media?: string[]
+    media?: string[],
   ) {
     this.owner = owner;
     this.status = "NOT_STARTED";

@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router";
-import { useAuth } from "@/features/auth/authContext";
+
 import Header from "@/pages/Dashboard/children/header";
+import { useInitApp } from "@/shared/firebase/client";
 
 const ProtectedPage = () => (
   <div>
@@ -10,7 +11,7 @@ const ProtectedPage = () => (
 );
 
 export const ProtectedRoute = () => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading } = useInitApp();
 
   if (isLoading) {
     return <div>Loading...</div>;
