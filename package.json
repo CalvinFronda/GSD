@@ -11,6 +11,7 @@
     "format": "npx prettier . --write"
   },
   "dependencies": {
+    "@dnd-kit/react": "^0.1.12",
     "@firebase/firestore": "^4.7.12",
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-alert-dialog": "^1.1.13",

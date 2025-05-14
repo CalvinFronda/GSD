@@ -6,6 +6,7 @@ import AuthLayout from "@/components/layout/AuthLayout";
 import Signup from "@/pages/Auth/Signup";
 import { ProtectedRoute } from "./protectedRoute";
 import Dashboard from "@/pages/Dashboard/Dashboard";
+import ActionPage from "@/pages/Action/Action";
 import { AuthProvider } from "@/features/auth/authContext";
 
 export const AppRouter = () => (
@@ -21,7 +22,7 @@ export const AppRouter = () => (
 
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard/inbox" element={<Dashboard />} />
-          <Route path="/dashboard/action" element={<h1>Action</h1>} />
+          <Route path="/dashboard/action" element={<ActionPage />} />
           <Route path="/dashboard/projects" element={<h1>Project</h1>} />
         </Route>
       </Routes>
