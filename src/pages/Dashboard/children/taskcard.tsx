@@ -27,7 +27,12 @@ import { TaskType } from "@/store/useTaskStore";
 const isCompleted = (status: TaskStatus) =>
   status === TASK_STATUS_TYPE.COMPLETED;
 
-const TaskCard = ({ task }: { task: TaskType }) => {
+interface TaskCardProps {
+  task: TaskType;
+  getPriorityColor: (priority: string) => string;
+  isDragging?: boolean;
+}
+const TaskCard = ({ task, getPriorityColor, isDragging }: TaskCardProps) => {
   const { content, status, difficulty } = task;
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -43,7 +48,9 @@ const TaskCard = ({ task }: { task: TaskType }) => {
 
   return (
     <>
-      <Card className="max-h-80 min-w-80 relative flex flex-col justify-between p-6">
+      <Card
+        className={`max-h-80 min-w-80 relative flex flex-col justify-between p-6 ${isDragging ? "shadow-lg" : ""}`}
+      >
         <div className="absolute top-4 right-4 z-10">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
