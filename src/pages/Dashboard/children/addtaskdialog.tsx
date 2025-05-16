@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dialog";
 
 import { z } from "zod";
-import { Task } from "@/models";
 import { TaskDifficulty, TaskWeight } from "@/types/index";
 import TasksFirestoreService from "@/services/db/tasks.firestore.service";
 import FirebaseAuth from "@/services/firebase-auth.service";
@@ -42,20 +41,16 @@ export function TaskDialog() {
           weight: weight as TaskWeight,
           updatedAt: new Date().toISOString(),
         };
-
-        await taskFirestoreService.update(selectedTask.id, updatedTask);
+        if (selectedTask.id) {
+          await taskFirestoreService.update(selectedTask.id, updatedTask);
+        }
       } else {
-        const task = new Task(
-          me.uid,
-          dueDate,
-          difficulty as TaskDifficulty,
-          weight as TaskWeight,
-          [],
-          title,
-          description,
-          [],
-        );
-        await taskFirestoreService.create(task.asObject());
+        const newTask = {
+          ...values,
+          difficulty: difficulty as TaskDifficulty,
+          weight: weight as TaskWeight,
+        };
+        await taskFirestoreService.createTask(newTask);
       }
 
       closeTaskDialog();
@@ -72,7 +67,7 @@ export function TaskDialog() {
       <DialogTrigger asChild>
         <Button variant="outline">New Task</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>{selectedTask ? "Edit" : "Create new"} task</DialogTitle>
         </DialogHeader>

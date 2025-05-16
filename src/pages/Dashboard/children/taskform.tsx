@@ -94,7 +94,7 @@ const TaskForm = ({ onSubmit, initialData }: TaskFormProps) => {
                   onValueChange={field.onChange}
                   value={field.value?.toString()}
                 >
-                  <FormControl>
+                  <FormControl className="min-w-36">
                     <SelectTrigger>
                       <SelectValue placeholder="Select difficulty" />
                     </SelectTrigger>
@@ -121,7 +121,7 @@ const TaskForm = ({ onSubmit, initialData }: TaskFormProps) => {
                   onValueChange={field.onChange}
                   value={field.value?.toString()}
                 >
-                  <FormControl>
+                  <FormControl className="min-w-36">
                     <SelectTrigger>
                       <SelectValue placeholder="Select weight" />
                     </SelectTrigger>
