@@ -23,11 +23,9 @@ class Task {
     difficulty: TaskDifficulty,
     weight: TaskWeight,
     labels: string[],
-    content: {
-      title: string;
-      description: string;
-      media?: string[];
-    }
+    title: string,
+    description: string,
+    media?: string[]
   ) {
     this.owner = owner;
     this.status = "NOT_STARTED";
@@ -37,9 +35,9 @@ class Task {
     this.weight = weight;
     this.labels = labels;
     this.content = {
-      title: content.title,
-      description: content.description,
-      media: content.media || [],
+      title: title,
+      description: description,
+      media: media || [],
     };
     this.createdAt = new Date().toISOString();
     this.updatedAt = new Date().toISOString();

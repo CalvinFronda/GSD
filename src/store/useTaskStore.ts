@@ -3,6 +3,7 @@ import { Task } from "@/models";
 
 import TasksFirestoreService from "@/services/db/tasks.firestore.service";
 import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
+import { getDoc } from "firebase/firestore";
 
 export interface TaskType extends Task {
   id?: string;
@@ -52,7 +53,7 @@ export const useTaskStore = create<TaskStoreTypes>((set, get) => ({
     try {
       const service = new TasksFirestoreService();
       if (task.id) {
-        const newTaskData = await service.update(task.id, {
+        await service.update(task.id, {
           updatedAt: now,
           status: TASK_STATUS_TYPE.ARCHIVED,
         });
@@ -62,12 +63,12 @@ export const useTaskStore = create<TaskStoreTypes>((set, get) => ({
   duplicateTask: async (task) => {
     try {
       const service = new TasksFirestoreService();
-
+      // TODO: STILL BROKEN
       // Extract the properties we want to copy, excluding id and createdAt
       const { id, createdAt, ...rest } = task;
 
       // Create a new task object
-      console.log("task in dup", task);
+
       const defaultNewTask = {
         ...rest,
         content: {
@@ -75,18 +76,19 @@ export const useTaskStore = create<TaskStoreTypes>((set, get) => ({
           title: `${task.content.title} (copy)`,
         },
       };
-      console.log("defaultNewTask", defaultNewTask);
-      // Save the new task to the database
-      const returnedTask = await service.createTask(defaultNewTask);
 
-      if (returnedTask) {
+      // Save the new task to the database
+      const returnedTask = await service.create(defaultNewTask);
+      if (!returnedTask) return null;
+      const data = await getDoc(returnedTask);
+      const taskData = data.data() as TaskType;
+      if (taskData) {
         // Update the state with the new task
         set((state) => ({
-          tasks: [...state.tasks, returnedTask],
+          tasks: [...state.tasks, taskData],
         }));
-        return returnedTask;
+        return taskData;
       }
-      console.log("returnedTask", returnedTask);
       return null;
     } catch (error) {
       console.error("Error duplicating task:", error);

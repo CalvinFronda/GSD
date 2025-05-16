@@ -10,12 +10,18 @@ class TasksFirestoreService extends FirestoreService {
     super(COLLECTIONS.TASKS, Task);
   }
 
-  async createTask(values?: {
-    content: { title: string; description?: string; media?: any[] };
-    dueDate?: string;
-    weight?: TaskWeight;
-
-    difficulty?: TaskDifficulty;
+  async createTask({
+    title,
+    dueDate,
+    weight,
+    description,
+    difficulty,
+  }: {
+    title: string;
+    dueDate: string;
+    weight: TaskWeight;
+    description: string;
+    difficulty: TaskDifficulty;
   }) {
     const auth = getAuth();
     const user = auth.currentUser;
@@ -26,16 +32,16 @@ class TasksFirestoreService extends FirestoreService {
 
     const task = new Task(
       user.uid,
-      values?.dueDate || now,
-      values?.difficulty || 2,
-      values?.weight || 2,
-      values?.content.media || [],
-      values?.content.title || "Untitled Task",
-      values?.content.description || "",
-      [] // tags or other field if needed
+      dueDate || now,
+      difficulty || 1,
+      weight || 1,
+      [], // labels
+      title || "Untitled Task",
+      description || "",
+      [] // media
     );
 
-    return this.create(task.asObject()) as unknown as Task;
+    await this.create(task.asObject());
   }
 
   async getTasksByOwner(): Promise<Task[]> {
