@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           // getDoc**
           // if not create user in firestore
           // else do nothing ( or add field to Usermodel called lastSeenAt and updated that as well as updatedAt)
-
+          setIsLoading(true);
           setUser(firebaseUser);
         } else {
           console.log("USER IS LOGGED OUT");
@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
       } catch (error) {
         console.error("error =", error);
+        setIsLoading(false);
       } finally {
         setIsLoading(false);
       }
