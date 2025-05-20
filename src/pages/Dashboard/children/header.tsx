@@ -11,18 +11,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getUserInitals } from "@/lib/utils";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { user, isLoading } = useAuth();
+  const { isLoading, userData } = useAuth();
   const handleLogout = async () => {
     await signOut(auth);
   };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  const userIcon = user?.displayName;
-  // TODO: get uuId get to users full name
+
+  const userIcon =
+    userData && getUserInitals(userData?.firstName, userData?.lastName);
+
   return (
     <header className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between bg-gray-700 text-white px-8 py-4 rounded-xl shadow-lg">
       <div className="flex-1 flex justify-center space-x-6">
@@ -46,9 +50,7 @@ export default function Header() {
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar className="w-10 h-10">
-              <AvatarFallback className="text-black">
-                {userIcon ? userIcon[0].toUpperCase() : "JD"}
-              </AvatarFallback>
+              <AvatarFallback className="text-black">{userIcon}</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent>

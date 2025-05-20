@@ -4,5 +4,7 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-// TODO: after we get full names
-export function getUserInitals(name: string) {}
+
+export function getUserInitals(firstName: string, lastName: string) {
+  return `${firstName[0]}${lastName[0]}`;
+}
