@@ -1,15 +1,8 @@
-import {
-  Navigate,
-  Outlet,
-  useLoaderData,
-  useMatches,
-  UIMatch,
-} from "react-router";
+import { Navigate, Outlet, useMatches, UIMatch } from "react-router";
 import { useInitApp } from "@/shared/firebase/client";
 import Loader from "@/components/ui/loader";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
-import { useEffect } from "react";
 
 interface RouteData {
   title: string;
@@ -21,15 +14,11 @@ interface MatchesType extends UIMatch {
 }
 
 const ProtectedPage = ({ isLoading }: { isLoading: boolean }) => {
-  const loaderData = useLoaderData() as RouteData;
   const matches = useMatches() as MatchesType[];
 
   const lastMatchWithData = [...matches].reverse().find((m) => m.data?.title);
   const title = lastMatchWithData?.data.title || "Default Title";
   const description = lastMatchWithData?.data.description || "";
-  useEffect(() => {
-    console.log("route Data", lastMatchWithData);
-  }, [loaderData]);
 
   return (
     <div>
