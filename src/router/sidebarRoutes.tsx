@@ -13,17 +13,17 @@ import {
 export const sidebarItems = [
   {
     title: "Dashboard",
-    url: "dashboard",
+    url: "/dashboard",
     icon: Home,
   },
   {
     title: "Inbox",
-    url: "inbox",
+    url: "/inbox",
     icon: Inbox,
   },
   {
     title: "Next Actions",
-    url: "next-actions",
+    url: "/next-actions",
     icon: Clipboard,
   },
   {
