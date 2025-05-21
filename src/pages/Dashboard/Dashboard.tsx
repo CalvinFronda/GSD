@@ -14,7 +14,6 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col gap-4 px-4 lg:px-6 ">
-      <h1>Need to orginize</h1>
       <div className="w-1/4">
         <TaskDialog />
       </div>

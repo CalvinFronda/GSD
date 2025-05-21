@@ -21,7 +21,7 @@ export default function Sidebar() {
             className={cn(
               "flex items-center gap-2 p-2 rounded hover:bg-muted-foreground/10",
               location.pathname === path &&
-                "bg-muted-foreground/20 font-semibold"
+                "bg-muted-foreground/20 font-semibold",
             )}
           >
             {icon}

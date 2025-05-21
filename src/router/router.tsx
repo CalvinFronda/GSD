@@ -7,9 +7,16 @@ import Signup from "@/pages/Auth/Signup";
 import { ProtectedRoute } from "./protectedRoute";
 import Dashboard from "@/pages/Dashboard/Dashboard";
 
-const Projects = () => <div>Projects</div>;
+const Projects = () => <div>hello</div>;
 
-const Inbox = () => <div>Inbox</div>;
+const Inbox = () => <div>world</div>;
+
+function headerLoader(title: string, description: string) {
+  return {
+    title: title,
+    description: description,
+  };
+}
 
 export const router = createBrowserRouter([
   {
@@ -37,14 +44,17 @@ export const router = createBrowserRouter([
       {
         path: "dashboard",
         Component: Dashboard,
+        loader: () => headerLoader("Dashboard", "This is the main page"),
       },
       {
         path: "inbox",
         Component: Inbox,
+        loader: () => ({ title: "Inbox", description: "Inbox Page" }),
       },
       {
         path: "projects",
         Component: Projects,
+        loader: () => ({ title: "Projects", description: "Projects Page" }),
       },
     ],
   },
