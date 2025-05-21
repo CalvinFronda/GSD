@@ -1,13 +1,18 @@
 import { Navigate, Outlet } from "react-router";
-
-import Header from "@/pages/Dashboard/children/header";
 import { useInitApp } from "@/shared/firebase/client";
 import Loader from "@/components/ui/loader";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/ui/app-sidebar";
 
 const ProtectedPage = ({ isLoading }: { isLoading: boolean }) => (
   <div>
-    <Header />
-    {!isLoading && <Outlet />}
+    <SidebarProvider>
+      <AppSidebar />
+      <main>
+        <SidebarTrigger />
+        {!isLoading && <Outlet />}
+      </main>
+    </SidebarProvider>
   </div>
 );
 

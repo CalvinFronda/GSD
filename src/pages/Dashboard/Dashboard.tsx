@@ -13,12 +13,12 @@ export default function Dashboard() {
   }, [tasks]);
 
   return (
-    <div className="flex flex-col gap-4  px-4 lg:px-6 py-28">
+    <div className="flex flex-col gap-4 px-4 lg:px-6 ">
       <h1>Need to orginize</h1>
       <div className="w-1/4">
         <TaskDialog />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-5 gap-4">
         {tasks.map((task, i) => (
           <TaskCard key={i} task={task} />
         ))}

@@ -1,5 +1,3 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
-
 import {
   Sidebar,
   SidebarContent,
@@ -12,34 +10,27 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-// Menu items.
-const items = [
-  {
-    title: "New Note",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "New Task",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "New Project",
-    url: "#",
-    icon: Calendar,
-  },
-];
+import { useNavigate } from "react-router";
+import { signOut } from "firebase/auth";
+import { auth } from "@/shared/firebase/client";
+import { sidebarItems } from "@/router/sidebarRoutes";
 
 export function AppSidebar() {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    navigate("/");
+  };
+
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Quick Capture</SidebarGroupLabel>
+          <SidebarGroupLabel>GTD Dashboard</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {sidebarItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
@@ -55,7 +46,7 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem>
+          <SidebarMenuItem onClick={handleLogout}>
             <span>Sign out</span>
           </SidebarMenuItem>
         </SidebarMenu>
