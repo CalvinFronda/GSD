@@ -1,16 +1,13 @@
 import { TaskDialog } from "@/pages/Dashboard/children/addtaskdialog";
 import TaskCard from "@/pages/Dashboard/children/taskcard";
-import { useEffect } from "react";
-import { useAuth } from "@/features/auth/authContext";
+
 import { useTaskStore } from "@/store/useTaskStore";
+import { useFetchTasks } from "@/hooks/useFetchTasks";
 
 export default function Dashboard() {
-  const { tasks, fetchTasks } = useTaskStore();
-  const { user } = useAuth();
+  const tasks = useTaskStore((s) => s.tasks);
 
-  useEffect(() => {
-    if (user) fetchTasks(user.uid);
-  }, [tasks]);
+  useFetchTasks();
 
   return (
     <div className="flex flex-col gap-4">

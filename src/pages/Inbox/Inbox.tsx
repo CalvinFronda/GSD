@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { EllipsisVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import {
@@ -7,20 +7,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { EllipsisVertical } from "lucide-react";
 import InboxItem from "@/components/ui/inbox-item";
-
 import { useTaskStore } from "@/store/useTaskStore";
-import { useAuth } from "@/features/auth/authContext";
+import { useFetchTasks } from "@/hooks/useFetchTasks";
+
 import InboxForm from "./children/inboxform";
 
 function Inbox() {
-  const { tasks, fetchTasks, isTaskLoading } = useTaskStore();
-  const { user } = useAuth();
-
-  useEffect(() => {
-    if (user && !isTaskLoading) fetchTasks(user.uid);
-  }, [tasks, isTaskLoading]);
+  const tasks = useTaskStore((s) => s.tasks);
+  useFetchTasks();
 
   return (
     <div>

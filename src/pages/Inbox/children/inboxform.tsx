@@ -26,7 +26,7 @@ function InboxForm() {
   const { user } = useAuth();
   const taskFirestoreService = new TasksFirestoreService();
 
-  const handleAddInbox = async (values: z.input<typeof inputSchema>) => {
+  const handleInboxSubmit = async (values: z.input<typeof inputSchema>) => {
     try {
       const validatedData = inputSchema.parse(values);
 
@@ -37,6 +37,8 @@ function InboxForm() {
       await taskFirestoreService.createTask(user.uid, validatedData);
     } catch (error) {
       console.error("Error handling task submission:", error);
+    } finally {
+      inputForm.reset();
     }
   };
 
@@ -51,7 +53,7 @@ function InboxForm() {
     <Form {...inputForm}>
       <form
         className="w-full"
-        onSubmit={inputForm.handleSubmit(handleAddInbox)}
+        onSubmit={inputForm.handleSubmit(handleInboxSubmit)}
       >
         <FormField
           control={inputForm.control}
