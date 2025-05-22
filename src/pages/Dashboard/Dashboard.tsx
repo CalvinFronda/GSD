@@ -13,7 +13,7 @@ export default function Dashboard() {
   }, [tasks]);
 
   return (
-    <div className="flex flex-col gap-4 px-4 lg:px-6 ">
+    <div className="flex flex-col gap-4">
       <div className="w-1/4">
         <TaskDialog />
       </div>

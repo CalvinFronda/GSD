@@ -4,4 +4,13 @@ type TaskDifficulty = 1 | 2 | 3 | 4;
 
 type TaskWeight = 1 | 2 | 3 | 4;
 
-export type { TaskStatus, TaskDifficulty, TaskWeight };
+type TaskInputDialog = {
+  title: string;
+  dueDate: string;
+  description: string;
+  weight?: number;
+  difficulty?: number;
+  media?: string[];
+};
+
+export type { TaskStatus, TaskDifficulty, TaskWeight, TaskInputDialog };

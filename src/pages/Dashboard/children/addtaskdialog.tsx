@@ -8,15 +8,48 @@ import {
 } from "@/components/ui/dialog";
 
 import { z } from "zod";
-import { Task } from "@/models";
-import { TaskDifficulty, TaskWeight } from "@/types/index";
+
 import TasksFirestoreService from "@/services/db/tasks.firestore.service";
 import FirebaseAuth from "@/services/firebase-auth.service";
 import TaskForm from "./taskform";
 import { taskSchema } from "./taskform";
 import { useTaskStore } from "@/store/useTaskStore";
 
-export function TaskDialog() {
+/**
+ * TaskDialog Component
+ *
+ * A dialog component that handles both creation and editing of tasks
+ * It uses Firebase for data persistence and Zod for form validation.
+ *
+ * Features:
+ * - Creates new tasks with title, description, due date, difficulty, and weight
+ * - Edits existing tasks while preserving media attachments
+ * - Validates input using Zod schema
+ * - Integrates with Firebase authentication and Firestore
+ * - Manages dialog state through useTaskStore
+ *
+ * @component
+ * @param {string} [props.btnTitle] - Optional custom title for the trigger button
+ *
+ * @example
+ * // Basic usage
+ * <TaskDialog />
+ *
+ * // With custom button title
+ * <TaskDialog btnTitle="Add New Task" />
+ *
+ * State Management:
+ * - Uses useTaskStore for managing dialog open/close state
+ * - Handles selected task state for edit mode
+ *
+ * Form Handling:
+ * - Validates input using taskSchema (Zod)
+ * - Preserves existing media when updating
+ * - Converts form values to proper task model structure
+ *
+
+ */
+export function TaskDialog({ btnTitle }: { btnTitle?: string }) {
   const taskFirestoreService = new TasksFirestoreService();
   const firebaseAuth = new FirebaseAuth();
 
@@ -24,43 +57,24 @@ export function TaskDialog() {
     useTaskStore();
 
   const onSubmit = async (values: z.input<typeof taskSchema>) => {
-    const { title, dueDate, weight, description, difficulty } =
-      taskSchema.parse(values);
-
     try {
-      const me = firebaseAuth.me();
-      if (!me) return;
-      if (selectedTask) {
-        const updatedTask = {
-          content: {
-            title,
-            description,
-            media: selectedTask.content.media || [], // preserve existing media
-          },
-          dueDate,
-          difficulty: difficulty as TaskDifficulty,
-          weight: weight as TaskWeight,
-          updatedAt: new Date().toISOString(),
-        };
+      const validatedData = taskSchema.parse(values);
+      const user = firebaseAuth.me();
 
-        await taskFirestoreService.update(selectedTask.id, updatedTask);
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+
+      if (selectedTask?.id) {
+        await taskFirestoreService.updateTask(selectedTask.id, validatedData);
       } else {
-        const task = new Task(
-          me.uid,
-          dueDate,
-          difficulty as TaskDifficulty,
-          weight as TaskWeight,
-          [],
-          title,
-          description,
-          [],
-        );
-        await taskFirestoreService.create(task.asObject());
+        await taskFirestoreService.createTask(user.uid, validatedData);
       }
 
       closeTaskDialog();
-    } catch (error: any) {
-      console.error("Error adding task: ", error);
+    } catch (error) {
+      console.error("Error handling task submission:", error);
+      // Consider adding proper error handling/user feedback here
     }
   };
 
@@ -70,7 +84,7 @@ export function TaskDialog() {
       onOpenChange={(open) => (open ? openTaskDialog() : closeTaskDialog())}
     >
       <DialogTrigger asChild>
-        <Button variant="outline">New Task</Button>
+        <Button variant="outline">{btnTitle || "New Task"}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
