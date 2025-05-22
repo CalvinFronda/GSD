@@ -45,12 +45,12 @@ class TasksFirestoreService extends FirestoreService {
   async createTask(userId: string, data: TaskInputDialog) {
     const task = new Task(
       userId,
-      data.dueDate,
-      data.difficulty as TaskDifficulty,
-      data.weight as TaskWeight,
+      data.dueDate || "",
+      (data.difficulty as TaskDifficulty) || null,
+      (data.weight as TaskWeight) || null,
       [],
       data.title,
-      data.description,
+      data.description || "",
       [],
     );
     return this.create(task.asObject());

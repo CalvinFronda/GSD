@@ -17,15 +17,11 @@ function InboxItem({ title, description }: InboxItem) {
         </div>
         <div className="ml-3 flex-grow">
           <div className="flex justify-between">
-            <p className="text-sm font-medium text-gray-900">
-              Call insurance company about claim
-            </p>
+            <p className="text-sm font-medium text-gray-900">{title}</p>
             <span className="text-xs text-gray-500">2h ago</span>
           </div>
           <div className="mt-1">
-            <p className="text-sm text-gray-600">
-              Need to follow up on claim #12345 for the car accident
-            </p>
+            <p className="text-sm text-gray-600">{description}</p>
           </div>
         </div>
       </div>

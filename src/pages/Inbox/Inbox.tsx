@@ -1,5 +1,5 @@
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -8,19 +8,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { EllipsisVertical } from "lucide-react";
-
 import InboxItem from "@/components/ui/inbox-item";
 
-const INBOX_PLACEHOLDER = "Add a new task, idea, or reminder...";
+import { useTaskStore } from "@/store/useTaskStore";
+import { useAuth } from "@/features/auth/authContext";
+import InboxForm from "./children/inboxform";
 
 function Inbox() {
+  const { tasks, fetchTasks, isTaskLoading } = useTaskStore();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user && !isTaskLoading) fetchTasks(user.uid);
+  }, [tasks, isTaskLoading]);
+
   return (
     <div>
-      <div className="flex flex-row justify-between  bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-6">
-        <Input placeholder={INBOX_PLACEHOLDER} />
-        <div className="flex pl-10">
-          <Button>Add to Inbox</Button>
-        </div>
+      <div className="flex flex-row justify-between bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-6">
+        <InboxForm />
       </div>
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
@@ -43,7 +48,13 @@ function Inbox() {
             </div>
           </div>
         </div>
-        <InboxItem />
+        {tasks.map((task, i) => (
+          <InboxItem
+            key={i}
+            title={task.content.title}
+            description={task.content.description}
+          />
+        ))}
       </div>
     </div>
   );

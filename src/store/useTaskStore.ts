@@ -10,6 +10,7 @@ export interface TaskType extends Task {
 
 type TaskStoreTypes = {
   tasks: TaskType[];
+  isTaskLoading: boolean;
   isTaskDialogOpen: boolean;
   selectedTask: TaskType | null;
   dialogMode: "create" | "edit";
@@ -25,13 +26,15 @@ const now = new Date().toISOString();
 
 export const useTaskStore = create<TaskStoreTypes>((set) => ({
   tasks: [],
+  isTaskLoading: false,
   isTaskDialogOpen: false,
   selectedTask: null,
   dialogMode: "create",
   fetchTasks: async (userId) => {
+    set({ isTaskLoading: true });
     const service = new TasksFirestoreService();
     const data = await service.getTasksByOwner(userId);
-    set({ tasks: data });
+    set({ tasks: data, isTaskLoading: false });
   },
   deleteTask: async (taskId) => {
     const service = new TasksFirestoreService();
