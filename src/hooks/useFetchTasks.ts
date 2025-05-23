@@ -13,8 +13,6 @@ export const useFetchTasks = () => {
   useEffect(() => {
     if (!user) return;
 
-    console.log("Setting up real-time listener for tasks");
-
     // Set up real-time listener
     const unsubscribe = onSnapshot(
       new TasksFirestoreService().collection,
@@ -25,7 +23,9 @@ export const useFetchTasks = () => {
           ...doc.data(),
         })) as TaskType[];
 
-        setTasks(tasks);
+        const filteredTasks = tasks.filter((task) => task.owner === user.uid);
+
+        setTasks(filteredTasks);
       },
       (error) => {
         console.error("Error listening to tasks:", error);
@@ -34,7 +34,6 @@ export const useFetchTasks = () => {
 
     // Cleanup
     return () => {
-      console.log("Cleaning up tasks listener");
       unsubscribe();
     };
   }, [user, setTasks]);

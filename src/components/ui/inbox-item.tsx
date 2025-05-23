@@ -3,9 +3,12 @@ import { FolderInput, Star, TrashIcon } from "lucide-react";
 import { ProcessDialog } from "@/pages/Inbox/children/processDialog";
 import { Button } from "./button";
 import { TaskType } from "@/store/useTaskStore";
+import { timeAgo } from "@/lib/time";
+import LocalToolTip from "./app-tooltip";
 
 function InboxItem({ task }: { task: TaskType }) {
   const { title, description } = task.content;
+  const { createdAt } = task;
 
   return (
     <li className="p-4 hover:bg-gray-50 transition-colors duration-150 list-none">
@@ -16,7 +19,7 @@ function InboxItem({ task }: { task: TaskType }) {
         <div className="ml-3 flex-grow">
           <div className="flex justify-between">
             <p className="text-sm font-medium text-gray-900">{title}</p>
-            <span className="text-xs text-gray-500">2h ago</span>
+            <span className="text-xs text-gray-500">{timeAgo(createdAt)}</span>
           </div>
           <div className="mt-1">
             <p className="text-sm text-gray-600">{description}</p>
@@ -27,28 +30,33 @@ function InboxItem({ task }: { task: TaskType }) {
         <ProcessDialog task={task} />
 
         <div className="flex items-center space-x-2">
-          <Button
-            className="hover:text-blue-500 transition-colors duration-200"
-            variant="ghost"
-            size="icon"
-          >
-            <FolderInput />
-          </Button>
-
-          <Button
-            className="hover:text-yellow-500 transition-colors duration-200"
-            variant="ghost"
-            size="icon"
-          >
-            <Star />
-          </Button>
-          <Button
-            className=" hover:text-red-500 transition-colors duration-200"
-            variant="ghost"
-            size="icon"
-          >
-            <TrashIcon />
-          </Button>
+          <LocalToolTip content="Someday">
+            <Button
+              className="hover:text-blue-500 transition-colors duration-200"
+              variant="ghost"
+              size="icon"
+            >
+              <FolderInput />
+            </Button>
+          </LocalToolTip>
+          <LocalToolTip content="Reference">
+            <Button
+              className="hover:text-yellow-500 transition-colors duration-200"
+              variant="ghost"
+              size="icon"
+            >
+              <Star />
+            </Button>
+          </LocalToolTip>
+          <LocalToolTip content="Delete">
+            <Button
+              className=" hover:text-red-500 transition-colors duration-200"
+              variant="ghost"
+              size="icon"
+            >
+              <TrashIcon />
+            </Button>
+          </LocalToolTip>
         </div>
       </div>
     </li>
