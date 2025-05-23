@@ -43,7 +43,7 @@ const TaskCard = ({ task }: { task: TaskType }) => {
 
   return (
     <>
-      <Card className="min-h-80 min-w-80 relative flex flex-col justify-between p-6">
+      <Card className="min-h-80 min-w-sm relative ">
         <div className="absolute top-4 right-4 z-10">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

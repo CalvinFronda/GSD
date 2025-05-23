@@ -46,7 +46,7 @@ export function LoginForm({
     const { email, password } = values;
     try {
       await firebaseAuthService.loginUser(email, password);
-      navigate("/dashboard/inbox");
+      navigate("/dashboard");
     } catch (error) {
       console.error("error =", error);
     }
