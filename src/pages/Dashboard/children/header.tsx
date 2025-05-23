@@ -12,16 +12,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getUserInitals } from "@/lib/utils";
+import Loader from "@/components/ui/loader";
 
 export default function Header() {
   const navigate = useNavigate();
   const { isLoading, userData } = useAuth();
   const handleLogout = async () => {
     await signOut(auth);
+    navigate("/");
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   const userIcon =

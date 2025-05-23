@@ -53,6 +53,7 @@ function useInitFirebase() {
   useEffect(() => {
     // Listen for authentication state changes
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setIsLoading(true);
       if (firebaseUser) {
         setUser(firebaseUser);
 
