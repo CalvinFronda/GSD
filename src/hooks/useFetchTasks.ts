@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { onSnapshot } from "firebase/firestore";
+import { onSnapshot, orderBy, query } from "firebase/firestore";
 
 import { TaskType, useTaskStore } from "@/store/useTaskStore";
 import { useAuth } from "@/features/auth/authContext";
@@ -12,11 +12,12 @@ export const useFetchTasks = () => {
 
   useEffect(() => {
     if (!user) return;
+    const collectionRef = new TasksFirestoreService().collection;
 
+    const q = query(collectionRef, orderBy("createdAt", "desc"));
     // Set up real-time listener
     const unsubscribe = onSnapshot(
-      new TasksFirestoreService().collection,
-
+      q,
       (snapshot) => {
         const tasks = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -29,7 +30,7 @@ export const useFetchTasks = () => {
       },
       (error) => {
         console.error("Error listening to tasks:", error);
-      },
+      }
     );
 
     // Cleanup
