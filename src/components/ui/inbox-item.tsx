@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { FolderInput, Star, TrashIcon } from "lucide-react";
+import { FolderInput, TrashIcon, BookMarked } from "lucide-react";
 import { ProcessDialog } from "@/pages/Inbox/children/processDialog";
 import { Button } from "./button";
 import { TaskType } from "@/store/useTaskStore";
@@ -45,7 +45,7 @@ function InboxItem({ task }: { task: TaskType }) {
               variant="ghost"
               size="icon"
             >
-              <Star />
+              <BookMarked />
             </Button>
           </LocalToolTip>
           <LocalToolTip content="Delete">
