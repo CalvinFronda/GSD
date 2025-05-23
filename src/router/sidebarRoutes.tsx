@@ -51,9 +51,4 @@ export const sidebarItems = [
     url: "weekly",
     icon: CircleCheck,
   },
-  {
-    title: "Settings",
-    url: "settings",
-    icon: Settings,
-  },
 ];
