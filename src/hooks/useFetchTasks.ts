@@ -21,6 +21,7 @@ export const useFetchTasks = () => {
 
       (snapshot) => {
         const tasks = snapshot.docs.map((doc) => ({
+          id: doc.id,
           ...doc.data(),
         })) as TaskType[];
 

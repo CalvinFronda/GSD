@@ -27,6 +27,8 @@ class TasksFirestoreService extends FirestoreService {
   }
 
   async updateTask(taskId: string, data: TaskInputDialog) {
+    if (!taskId) return;
+
     const updatedTask = {
       content: {
         title: data.title,
@@ -43,6 +45,7 @@ class TasksFirestoreService extends FirestoreService {
   }
 
   async createTask(userId: string, data: TaskInputDialog) {
+    if (!userId) return;
     const task = new Task(
       userId,
       data.dueDate || "",

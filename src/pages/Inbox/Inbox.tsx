@@ -26,7 +26,7 @@ function Inbox() {
         <div className="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
           <h3 className="font-medium text-gray-700">Unproccesed Items</h3>
           <div className="flex items-center space-x-2">
-            <Button>Process All</Button>
+            {/* <Button>Process All</Button> */}
             <div className="relative">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -44,11 +44,7 @@ function Inbox() {
           </div>
         </div>
         {tasks.map((task, i) => (
-          <InboxItem
-            key={i}
-            title={task.content.title}
-            description={task.content.description}
-          />
+          <InboxItem key={i} task={task} />
         ))}
       </div>
     </div>

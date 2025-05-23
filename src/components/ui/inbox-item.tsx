@@ -1,14 +1,12 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { FolderInput, Star, TrashIcon } from "lucide-react";
-import { TaskDialog } from "@/pages/Dashboard/children/addtaskdialog";
+import { ProcessDialog } from "@/pages/Inbox/children/processDialog";
 import { Button } from "./button";
+import { TaskType } from "@/store/useTaskStore";
 
-interface InboxItem {
-  title: string;
-  description: string;
-}
+function InboxItem({ task }: { task: TaskType }) {
+  const { title, description } = task.content;
 
-function InboxItem({ title, description }: InboxItem) {
   return (
     <li className="p-4 hover:bg-gray-50 transition-colors duration-150 list-none">
       <div className="flex items-start">
@@ -26,7 +24,7 @@ function InboxItem({ title, description }: InboxItem) {
         </div>
       </div>
       <div className="mt-2 ml-8 flex items-center space-x-2">
-        <TaskDialog btnTitle="Process" />
+        <ProcessDialog task={task} />
 
         <div className="flex items-center space-x-2">
           <Button
