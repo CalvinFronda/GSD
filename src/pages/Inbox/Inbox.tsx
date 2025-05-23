@@ -1,5 +1,4 @@
 import { EllipsisVertical } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -16,7 +15,7 @@ import InboxForm from "./children/inboxform";
 function Inbox() {
   const tasks = useTaskStore((s) => s.tasks);
   useFetchTasks();
-
+  // TODO: Pagination, Sorting
   return (
     <div>
       <div className="flex flex-row justify-between bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-6">
@@ -24,7 +23,9 @@ function Inbox() {
       </div>
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-          <h3 className="font-medium text-gray-700">Unproccesed Items</h3>
+          <h3 className="font-medium text-gray-700">
+            Unproccesed Items ({tasks.length})
+          </h3>
           <div className="flex items-center space-x-2">
             {/* <Button>Process All</Button> */}
             <div className="relative">

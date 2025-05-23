@@ -1,4 +1,9 @@
-type TaskStatus = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED" | "ARCHIVED";
+type TaskStatus =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "WAITING"
+  | "ARCHIVED";
 
 type TaskDifficulty = 1 | 2 | 3 | 4;
 

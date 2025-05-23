@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -29,8 +30,12 @@ export function ProcessDialog({ task }: { task: TaskType }) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Process Item</DialogTitle>
+          <DialogDescription>
+            Tidy up your task by setting details or assigning it to a project. A
+            clear inbox helps you focus on what really matters.
+          </DialogDescription>
         </DialogHeader>
-        <ProcessForm initialData={task} />
+        <ProcessForm initialData={task} handleOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );

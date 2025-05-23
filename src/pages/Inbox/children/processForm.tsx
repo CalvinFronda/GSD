@@ -26,6 +26,7 @@ import { useForm } from "react-hook-form";
 import TasksFirestoreService from "@/services/db/tasks.firestore.service";
 import FirebaseAuth from "@/services/firebase-auth.service";
 import { TaskType } from "@/store/useTaskStore";
+import { Dispatch, SetStateAction } from "react";
 
 export const taskSchema = z.object({
   title: z.string(),
@@ -35,7 +36,12 @@ export const taskSchema = z.object({
   difficulty: z.preprocess((val) => Number(val), z.number().int()),
 });
 
-const ProcessForm = ({ initialData }: { initialData: TaskType }) => {
+interface ProcessForm {
+  initialData: TaskType;
+  handleOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+const ProcessForm = ({ initialData, handleOpen }: ProcessForm) => {
   const taskFirestoreService = new TasksFirestoreService();
   const firebaseAuth = new FirebaseAuth();
   const taskForm = useForm<z.input<typeof taskSchema>>({
@@ -61,6 +67,7 @@ const ProcessForm = ({ initialData }: { initialData: TaskType }) => {
     } catch (error) {
       console.error("Error handling task submission:", error);
     } finally {
+      handleOpen(false);
     }
   };
 
@@ -167,7 +174,7 @@ const ProcessForm = ({ initialData }: { initialData: TaskType }) => {
         />
 
         <DialogFooter>
-          <Button type="submit">{initialData ? "Edit" : "Create"} Task</Button>
+          <Button type="submit"> Process</Button>
           <DialogClose asChild>
             <Button type="button" variant="secondary">
               Cancel
