@@ -1,6 +1,7 @@
 enum COLLECTIONS {
   USERS = "users",
   TASKS = "tasks",
+  PROJECTS = "projects",
 }
 
 enum TASK_STATUS_TYPE {
