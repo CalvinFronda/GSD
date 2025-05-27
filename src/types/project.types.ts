@@ -5,4 +5,11 @@ type ProjectStatus =
   | "COMPLETED"
   | "ARCHIVED";
 
-export type { ProjectStatus };
+type ProjectInputDialog = {
+  title: string;
+  dueDate?: string;
+  description?: string;
+  labels: string[];
+};
+
+export type { ProjectStatus, ProjectInputDialog };

@@ -1,26 +1,25 @@
-import { useTaskStore } from "@/store/useTaskStore";
-import { useFetchTasks } from "@/hooks/useFetchTasks";
 import ProjectCard from "./children/ProjectCard";
 
-import { Button } from "@/components/ui/button";
+import { ProjectDialog } from "./children/ProjectDialog";
+import { useProjectStore } from "@/store/useProjectStore";
+import { useFetchProjects } from "@/hooks/useFetchProjects";
 /**
- 
+    Projects page 
  */
 
 function Projects() {
-  const tasks = useTaskStore((s) => s.tasks);
-  useFetchTasks();
-  // Client side pagination
+  const projects = useProjectStore((s) => s.projects);
+  useFetchProjects();
 
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <Button> Create Project</Button>
+        <ProjectDialog />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <ProjectCard />
-        <ProjectCard />
-        <ProjectCard />
+        {projects.map((p) => (
+          <ProjectCard project={p} />
+        ))}
       </div>
     </div>
   );

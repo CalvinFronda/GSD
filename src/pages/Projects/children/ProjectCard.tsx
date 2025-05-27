@@ -12,33 +12,41 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const ProjectCard = () => {
+import { ProjectType } from "@/store/useProjectStore";
+
+const ProjectCard = ({ project }: { project: ProjectType }) => {
   const [progress, setProgress] = useState(13);
+
+  const { title, dueDate, description, labels } = project;
+
   return (
     <Card className="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
       <CardHeader>
         <CardTitle>
           <div className="flex justify-between items-start">
-            <h3 className="font-medium  text-lg">Project Title</h3>
+            <h3 className="font-medium  text-lg">{title}</h3>
             <div className="flex">
               <Button type="button" size="icon" variant="ghost">
                 <Pencil />
               </Button>
-              <button>
-                <Button type="button" size="icon" variant="ghost">
-                  <Trash />
-                </Button>
-              </button>
+              <Button type="button" size="icon" variant="ghost">
+                <Trash />
+              </Button>
             </div>
           </div>
-          <div className="mt-2 flex items-center">
-            <div className="bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full">
-              @work
+          <div className="mt-2 flex items-center gap-2">
+            {labels.map((x) => (
+              <div className="bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full ">
+                {x}
+              </div>
+            ))}
+
+            <div className="ml-2 text-sm">
+              {dueDate ? dueDate : "No due date"}
             </div>
-            <div className="ml-2 text-sm">Due: May 15</div>
           </div>
         </CardTitle>
-        <CardDescription>Deploy your new project in one-click.</CardDescription>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
         <div>
