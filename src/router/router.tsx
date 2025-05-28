@@ -49,7 +49,7 @@ export const router = createBrowserRouter([
         loader: () => ({
           title: "Inbox",
           description:
-            "These are your immediately actionable tasks. Focus on what you can do now. ",
+            "These are your immediately actionable tasks. Focus on what you can do now.",
         }),
       },
       {

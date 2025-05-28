@@ -1,4 +1,5 @@
 import type { ProjectStatus } from "@/types/index";
+import Task from "./task.model";
 
 class Project {
   owner: string;
@@ -8,6 +9,7 @@ class Project {
   labels: string[];
   title: string;
   description: string;
+  tasks: Task[];
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -18,6 +20,7 @@ class Project {
     labels: string[],
     title: string,
     description: string,
+    tasks: Task[],
   ) {
     this.owner = owner;
     this.status = "NOT_STARTED";
@@ -26,6 +29,7 @@ class Project {
     this.labels = labels;
     this.title = title;
     this.description = description;
+    this.tasks = tasks;
     this.createdAt = new Date().toISOString();
     this.updatedAt = new Date().toISOString();
     this.deletedAt = null;

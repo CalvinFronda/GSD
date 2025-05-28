@@ -1,3 +1,4 @@
+import { Task } from "@/models";
 import FirestoreService from "./firestore.service";
 import { COLLECTIONS, TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 
@@ -31,9 +32,30 @@ class ProjectsFirestoreService extends FirestoreService {
       data.labels,
       data.title,
       data.description || "",
+      [],
     );
 
     await this.create(project.asObject());
+  }
+
+  async addTaskToProject(projectId: string, task: Task) {
+    try {
+      const projectDoc = (await this.get(projectId)) as Project;
+
+      if (!projectId) {
+        throw new Error(`Project with ID ${projectId} not found`);
+      }
+
+      await this.update(projectId, {
+        tasks: [...(projectDoc.tasks || []), task],
+        updatedAt: new Date().toISOString(),
+      });
+
+      return true;
+    } catch (error) {
+      console.error("Error adding task to project");
+      throw error;
+    }
   }
 }
 
