@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash, X } from "lucide-react";
@@ -13,23 +13,39 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ProjectType, useProjectStore } from "@/store/useProjectStore";
+import { ProjectType } from "@/store/useProjectStore";
 import TasksFirestoreService from "@/services/db/tasks.firestore.service";
 import { useAuth } from "@/features/auth/authContext";
+import {
+  PROJECT_STATUS_TYPE,
+  TASK_STATUS_TYPE,
+} from "@/constants/firestore.constants";
+
+import { TaskType, useTaskStore } from "@/store/useTaskStore";
+import Loader from "@/components/ui/loader";
+import { useFetchTasks } from "@/hooks/useFetchTasks";
 
 const taskSchema = z.object({
   title: z.string().min(1, "Task title is required"),
 });
 
 const ProjectCard = ({ project }: { project: ProjectType }) => {
-  const [progress, setProgress] = useState(13);
+  const [progress, setProgress] = useState(0);
   const [addTaskBtn, setAddTaskBtn] = useState(false);
   const [taskInput, setTaskInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { addTaskToProject } = useProjectStore();
+  useFetchTasks();
   const { user } = useAuth();
   const { id, title, dueDate, description, labels } = project;
-  console.log("Im card", project);
+  const { tasks } = useTaskStore((s) => s);
+  const filteredTask = tasks.filter((task) => task.projectId === project.id);
+
+  const service = new TasksFirestoreService();
+  const completedTasks = filteredTask.filter(
+    (task) => task.status === "COMPLETED",
+  ).length;
+
+  const totalTasks = filteredTask.length;
 
   const handleCreateTask = async () => {
     const parsed = taskSchema.safeParse({ title: taskInput });
@@ -39,7 +55,7 @@ const ProjectCard = ({ project }: { project: ProjectType }) => {
     }
 
     setIsLoading(true);
-    const service = new TasksFirestoreService();
+
     try {
       if (!user?.uid) return;
       if (!id) return;
@@ -47,26 +63,61 @@ const ProjectCard = ({ project }: { project: ProjectType }) => {
       const newTask = await service.createTask(user?.uid, {
         title: parsed.data.title,
         projectId: id,
-        status: "IN_PROGRESS",
+        status: PROJECT_STATUS_TYPE.IN_PROGRESS,
       });
       if (!newTask) return;
 
-      addTaskToProject(project.id, newTask);
       setTaskInput("");
       setAddTaskBtn(false);
 
-      const completedTasks = project.tasks.filter(
-        (task) => task.status === "COMPLETED",
-      ).length;
-      const totalTasks = project.tasks.length + 1;
       setProgress((completedTasks / totalTasks) * 100);
-      // optionally refetch project tasks here
     } catch (error) {
       console.error("Failed to create task");
     } finally {
       setIsLoading(false);
     }
   };
+
+  async function handleCheckTask(task: TaskType) {
+    if (!task.id) return;
+
+    try {
+      const service = new TasksFirestoreService();
+
+      // Toggle the status
+      const newStatus =
+        task.status === TASK_STATUS_TYPE.COMPLETED
+          ? TASK_STATUS_TYPE.IN_PROGRESS
+          : TASK_STATUS_TYPE.COMPLETED;
+
+      // Update task in Firestore
+      await service.update(task.id, {
+        status: newStatus,
+        completedAt:
+          newStatus === TASK_STATUS_TYPE.IN_PROGRESS
+            ? null
+            : new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+
+      // Update local tasks state
+      const updatedTasks = tasks.map((t: TaskType) =>
+        t.id === task.id ? { ...t, status: newStatus } : t,
+      );
+
+      // Update progress
+      const newCompletedCount = updatedTasks.filter(
+        (t) => t.status === TASK_STATUS_TYPE.COMPLETED,
+      ).length;
+      setProgress((newCompletedCount / updatedTasks.length) * 100);
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
+  }
+
+  useEffect(() => {
+    setProgress((completedTasks / totalTasks) * 100 || 0);
+  }, [progress]);
 
   return (
     <Card className="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
@@ -101,19 +152,32 @@ const ProjectCard = ({ project }: { project: ProjectType }) => {
       <CardContent>
         <div>
           <div className="flex items-center justify-between mb-3">
-            <div className="text-sm text-gray-600">Progress: 60%</div>
-            <div className="text-sm text-gray-600">3/5 tasks</div>
+            <div className="text-sm text-gray-600">
+              Progress: {Math.round(progress)} %
+            </div>
+            <div className="text-sm text-gray-600">
+              {
+                filteredTask.filter((task) => task.status === "COMPLETED")
+                  .length
+              }
+              /{filteredTask.length} tasks
+            </div>
           </div>
           <Progress value={progress} />
         </div>
 
         {/* Placeholder task example */}
         <div className="p-4">
-          {project.tasks &&
-            project.tasks.map((task) => (
-              <div className="flex items-center space-x-2">
-                {/*On click should update task status to "completed" or "uncomplete" */}
-                <Checkbox id="task" />
+          {isLoading ? (
+            <Loader />
+          ) : (
+            filteredTask.map((task, i) => (
+              <div className="flex items-center space-x-2" key={i}>
+                <Checkbox
+                  checked={task.status === PROJECT_STATUS_TYPE.COMPLETED}
+                  onCheckedChange={() => handleCheckTask(task)}
+                  disabled={isLoading}
+                />
                 <label
                   htmlFor="task"
                   className="text-sm font-medium leading-none"
@@ -121,7 +185,8 @@ const ProjectCard = ({ project }: { project: ProjectType }) => {
                   {task.content.title}
                 </label>
               </div>
-            ))}
+            ))
+          )}
         </div>
       </CardContent>
 

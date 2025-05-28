@@ -11,9 +11,6 @@ import ProjectsPage from "@/pages/Projects/Projects";
 
 import AccountPage from "@/pages/Account/Account";
 
-const Projects = () => <div>hello</div>;
-
-
 function headerLoader(title: string, description: string) {
   return {
     title: title,

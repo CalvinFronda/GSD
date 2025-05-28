@@ -17,8 +17,8 @@ function Projects() {
         <ProjectDialog />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {projects.map((p) => (
-          <ProjectCard project={p} />
+        {projects.map((p, i) => (
+          <ProjectCard project={p} key={i} />
         ))}
       </div>
     </div>

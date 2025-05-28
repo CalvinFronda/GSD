@@ -27,7 +27,7 @@ export function ProjectDialog() {
   const onSubmit = async (values: z.input<typeof projectSchema>) => {
     try {
       const validatedData = projectSchema.parse(values);
-      console.log(validatedData);
+
       const user = firebaseAuth.me();
 
       if (!user) {
