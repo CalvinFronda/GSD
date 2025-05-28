@@ -86,7 +86,7 @@ export function TaskDialog({ btnTitle }: { btnTitle?: string }) {
       <DialogTrigger asChild>
         <Button variant="outline">{btnTitle || "New Task"}</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>{selectedTask ? "Edit" : "Create new"} task</DialogTitle>
         </DialogHeader>

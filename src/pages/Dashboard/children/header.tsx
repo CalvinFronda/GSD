@@ -41,6 +41,13 @@ export default function Header() {
         </Button>
         <Button
           variant="ghost"
+          onClick={() => navigate("/dashboard/action")}
+          className="text-white font-semibold"
+        >
+          Action
+        </Button>
+        <Button
+          variant="ghost"
           onClick={() => navigate("/dashboard/projects")}
           className="text-white font-semibold"
         >
