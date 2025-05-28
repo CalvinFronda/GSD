@@ -6,6 +6,7 @@ import AuthLayout from "@/components/layout/AuthLayout";
 import Signup from "@/pages/Auth/Signup";
 import { ProtectedRoute } from "./protectedRoute";
 import Dashboard from "@/pages/Dashboard/Dashboard";
+import Account from "@/pages/Account/Account";
 
 const Projects = () => <div>hello</div>;
 
@@ -57,6 +58,11 @@ export const router = createBrowserRouter([
         path: "projects",
         Component: Projects,
         loader: () => ({ title: "Projects", description: "Projects Page" }),
+      },
+      {
+        path: "account",
+        Component: Account,
+        loader: () => ({ title: "Settings" }),
       },
     ],
   },
