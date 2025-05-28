@@ -22,13 +22,11 @@ import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import type { Task } from "@/models";
 
-interface TaskFormProps {
-  onSubmit: (values: z.input<typeof taskSchema>) => Promise<void>;
-  initialData?: Task | null;
-  submitLabel?: string;
-}
+import TasksFirestoreService from "@/services/db/tasks.firestore.service";
+import FirebaseAuth from "@/services/firebase-auth.service";
+import { TaskType } from "@/store/useTaskStore";
+import { Dispatch, SetStateAction } from "react";
 
 export const taskSchema = z.object({
   title: z.string(),
@@ -37,7 +35,15 @@ export const taskSchema = z.object({
   description: z.string(),
   difficulty: z.preprocess((val) => Number(val), z.number().int()),
 });
-const TaskForm = ({ onSubmit, initialData }: TaskFormProps) => {
+
+interface ProcessForm {
+  initialData: TaskType;
+  handleOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+const ProcessForm = ({ initialData, handleOpen }: ProcessForm) => {
+  const taskFirestoreService = new TasksFirestoreService();
+  const firebaseAuth = new FirebaseAuth();
   const taskForm = useForm<z.input<typeof taskSchema>>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
@@ -48,6 +54,22 @@ const TaskForm = ({ onSubmit, initialData }: TaskFormProps) => {
       difficulty: initialData?.difficulty?.toString() ?? "",
     },
   });
+  const onSubmit = async (values: z.input<typeof taskSchema>) => {
+    try {
+      const validatedData = taskSchema.parse(values);
+      const user = firebaseAuth.me();
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+      if (initialData.id) {
+        await taskFirestoreService.updateTask(initialData.id, validatedData);
+      }
+    } catch (error) {
+      console.error("Error handling task submission:", error);
+    } finally {
+      handleOpen(false);
+    }
+  };
 
   return (
     <Form {...taskForm}>
@@ -93,7 +115,7 @@ const TaskForm = ({ onSubmit, initialData }: TaskFormProps) => {
                   onValueChange={field.onChange}
                   value={field.value?.toString()}
                 >
-                  <FormControl className="min-w-36">
+                  <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select difficulty" />
                     </SelectTrigger>
@@ -120,7 +142,7 @@ const TaskForm = ({ onSubmit, initialData }: TaskFormProps) => {
                   onValueChange={field.onChange}
                   value={field.value?.toString()}
                 >
-                  <FormControl className="min-w-36">
+                  <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select weight" />
                     </SelectTrigger>
@@ -152,7 +174,7 @@ const TaskForm = ({ onSubmit, initialData }: TaskFormProps) => {
         />
 
         <DialogFooter>
-          <Button type="submit">{initialData ? "Edit" : "Create"} Task</Button>
+          <Button type="submit"> Process</Button>
           <DialogClose asChild>
             <Button type="button" variant="secondary">
               Cancel
@@ -164,4 +186,4 @@ const TaskForm = ({ onSubmit, initialData }: TaskFormProps) => {
   );
 };
 
-export default TaskForm;
+export default ProcessForm;

@@ -3,7 +3,7 @@ import type { TaskStatus, TaskDifficulty, TaskWeight } from "@/types/index";
 class Task {
   owner: string;
   status: TaskStatus;
-  dueDate: string;
+  dueDate: string | null;
   completedAt: string | null;
   difficulty: TaskDifficulty;
   weight: TaskWeight;
