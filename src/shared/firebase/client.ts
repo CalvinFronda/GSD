@@ -65,9 +65,10 @@ function useInitFirebase() {
         } catch (error) {
           console.log("Error fetching user data:", error);
         }
-
-        setIsLoading(false);
+      } else {
+        setUser(null);
       }
+      setIsLoading(false);
     });
     // Save settings to localStorage whenever they change
     localStorage.setItem("appSettings", JSON.stringify(settings));
