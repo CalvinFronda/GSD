@@ -5,8 +5,14 @@ import InboxPage from "@/pages/Inbox/Inbox";
 import AuthLayout from "@/components/layout/AuthLayout";
 import Signup from "@/pages/Auth/Signup";
 import { ProtectedRoute } from "./protectedRoute";
+
 import DashboardPage from "@/pages/Dashboard/Dashboard";
 import ProjectsPage from "@/pages/Projects/Projects";
+
+import AccountPage from "@/pages/Account/Account";
+
+const Projects = () => <div>hello</div>;
+
 
 function headerLoader(title: string, description: string) {
   return {
@@ -59,6 +65,11 @@ export const router = createBrowserRouter([
           title: "Projects",
           description: "Track your progress on larger initiatives.",
         }),
+      },
+      {
+        path: "account",
+        Component: AccountPage,
+        loader: () => ({ title: "Settings" }),
       },
     ],
   },

@@ -53,9 +53,11 @@ export const useTaskStore = create<TaskStoreTypes>((set) => ({
     const service = new TasksFirestoreService();
 
     const { id, createdAt, ...rest } = task;
+    console.log(rest);
     const newTask = {
       ...rest,
       content: {
+        ...rest.content,
         title: task.content.title + " (copy)",
       },
       createdAt: now,
