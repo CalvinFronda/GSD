@@ -30,7 +30,7 @@ export const useFetchTasks = () => {
       },
       (error) => {
         console.error("Error listening to tasks:", error);
-      }
+      },
     );
 
     // Cleanup

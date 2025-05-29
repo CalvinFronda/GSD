@@ -7,6 +7,7 @@ import Signup from "@/pages/Auth/Signup";
 import { ProtectedRoute } from "./protectedRoute";
 import Dashboard from "@/pages/Dashboard/Dashboard";
 import Account from "@/pages/Account/Account";
+import NextActionPage from "@/pages/NextActions/NextAction";
 
 const Projects = () => <div>hello</div>;
 
@@ -50,8 +51,16 @@ export const router = createBrowserRouter([
         Component: Inbox,
         loader: () => ({
           title: "Inbox",
+          description: "These are your all of your tasks.",
+        }),
+      },
+      {
+        path: "next-actions",
+        Component: NextActionPage,
+        loader: () => ({
+          title: "Next Actions",
           description:
-            "These are your immediately actionable tasks. Focus on what you can do now. ",
+            "These are your immediately actionable tasks. Focus on what you can do now.",
         }),
       },
       {
