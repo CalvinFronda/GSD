@@ -16,6 +16,8 @@ type TaskInputDialog = {
   weight?: number;
   difficulty?: number;
   media?: string[];
+  projectId?: string;
+  status?: string;
 };
 
 export type { TaskStatus, TaskDifficulty, TaskWeight, TaskInputDialog };

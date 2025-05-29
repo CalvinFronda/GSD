@@ -1,32 +1,35 @@
 import { useEffect } from "react";
 import { onSnapshot, orderBy, query } from "firebase/firestore";
 
-import { TaskType, useTaskStore } from "@/store/useTaskStore";
 import { useAuth } from "@/features/auth/authContext";
-import TasksFirestoreService from "@/services/db/tasks.firestore.service";
+
+import ProjectsFirestoreService from "@/services/db/projects.firestore.service";
+import { ProjectType, useProjectStore } from "@/store/useProjectStore";
 
 // Real time task event listener
-export const useFetchTasks = () => {
+export const useFetchProjects = () => {
   const { user } = useAuth();
-  const { setTasks } = useTaskStore();
+  const { setProject } = useProjectStore();
 
   useEffect(() => {
     if (!user) return;
-    const collectionRef = new TasksFirestoreService().collection;
+    const collectionRef = new ProjectsFirestoreService().collection;
 
     const q = query(collectionRef, orderBy("createdAt", "desc"));
     // Set up real-time listener
     const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
-        const tasks = snapshot.docs.map((doc) => ({
+        const projects = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        })) as TaskType[];
+        })) as ProjectType[];
 
-        const filteredTasks = tasks.filter((task) => task.owner === user.uid);
+        const filteredTasks = projects.filter(
+          (project) => project.owner === user.uid && !project.deletedAt,
+        );
 
-        setTasks(filteredTasks);
+        setProject(filteredTasks);
       },
       (error) => {
         console.error("Error listening to tasks:", error);
@@ -37,5 +40,5 @@ export const useFetchTasks = () => {
     return () => {
       unsubscribe();
     };
-  }, [user, setTasks]);
+  }, [user, setProject]);
 };

@@ -13,34 +13,39 @@ class Task {
     description: string;
     media: string[];
   };
+  projectId: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
 
   constructor(
     owner: string,
-    dueDate: string,
+    status: TaskStatus = "NOT_STARTED",
+    dueDate: string | null,
     difficulty: TaskDifficulty,
     weight: TaskWeight,
     labels: string[],
     title: string,
     description: string,
-    media?: string[],
+    media: string[] = [],
+    projectId: string | null = null,
   ) {
     this.owner = owner;
-    this.status = "NOT_STARTED";
+    this.status = status;
     this.dueDate = dueDate;
     this.completedAt = null;
     this.difficulty = difficulty;
     this.weight = weight;
     this.labels = labels;
     this.content = {
-      title: title,
-      description: description,
-      media: media || [],
+      title,
+      description,
+      media,
     };
-    this.createdAt = new Date().toISOString();
-    this.updatedAt = new Date().toISOString();
+    this.projectId = projectId;
+    const now = new Date().toISOString();
+    this.createdAt = now;
+    this.updatedAt = now;
     this.deletedAt = null;
   }
 
