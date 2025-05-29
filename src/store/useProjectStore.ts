@@ -3,6 +3,7 @@ import { Project } from "@/models";
 
 import TasksFirestoreService from "@/services/db/tasks.firestore.service";
 import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
+import ProjectsFirestoreService from "@/services/db/projects.firestore.service";
 
 export interface ProjectType extends Project {
   id?: string;
@@ -36,9 +37,9 @@ export const useProjectStore = create<ProjectStoreTypes>((set) => ({
       projects: [...state.projects, project],
     })),
   setProject: (projects) => set({ projects }),
-  deleteProject: async (taskId) => {
-    const service = new TasksFirestoreService();
-    return await service.deleteTaskById(taskId);
+  deleteProject: async (projectId) => {
+    const service = new ProjectsFirestoreService();
+    return await service.deleteProjectkById(projectId);
   },
   archiveProject: async (project) => {
     const service = new TasksFirestoreService();

@@ -1,4 +1,3 @@
-import { Task } from "@/models";
 import FirestoreService from "./firestore.service";
 import { COLLECTIONS, TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 
@@ -12,7 +11,7 @@ class ProjectsFirestoreService extends FirestoreService {
   }
 
   async getProjectsByOwner(ownerId: string): Promise<Project[]> {
-    return this.queryDocs<Project>([
+    return await this.queryDocs<Project>([
       where("owner", "==", ownerId),
       where("deletedAt", "==", null),
       where("status", "in", [
@@ -32,30 +31,20 @@ class ProjectsFirestoreService extends FirestoreService {
       data.labels,
       data.title,
       data.description || "",
-      [],
     );
 
     await this.create(project.asObject());
   }
 
-  async addTaskToProject(projectId: string, task: Task) {
-    try {
-      const projectDoc = (await this.get(projectId)) as Project;
+  async updateProject(projectId: string, data: ProjectInputDialog) {
+    if (!projectId) return;
 
-      if (!projectId) {
-        throw new Error(`Project with ID ${projectId} not found`);
-      }
+    return await this.update(projectId, data);
+  }
 
-      await this.update(projectId, {
-        tasks: [...(projectDoc.tasks || []), task],
-        updatedAt: new Date().toISOString(),
-      });
-
-      return true;
-    } catch (error) {
-      console.error("Error adding task to project");
-      throw error;
-    }
+  async deleteProjectkById(projectId: string) {
+    const now = new Date().toISOString();
+    return await this.update(projectId, { deletedAt: now, updatedAt: now });
   }
 }
 

@@ -70,12 +70,12 @@ export const LabelSelect = ({ values, onChange }: LabelSelectProps) => {
 
   return (
     <div>
-      <div className="mb-2 flex flex-wrap gap-2">
+      <div className="mb-2 flex flex-wrap gap-2 ">
         {values.map((label) => (
           <Badge
             key={label}
             variant="secondary"
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full"
             onClick={() => toggleValue(label)}
           >
             {label}
@@ -92,7 +92,7 @@ export const LabelSelect = ({ values, onChange }: LabelSelectProps) => {
             type="button"
             variant="outline"
             role="combobox"
-            className="w-full justify-between"
+            className="w-50 justify-between"
           >
             {values.length === 0 ? "Select or create labels" : "Edit labels"}
           </Button>

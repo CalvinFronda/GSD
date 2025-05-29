@@ -7,9 +7,10 @@ type ProjectStatus =
 
 type ProjectInputDialog = {
   title: string;
-  dueDate?: string;
+  dueDate?: string | undefined | null;
   description?: string;
   labels: string[];
+  updatedAt: string | undefined | null;
 };
 
 export type { ProjectStatus, ProjectInputDialog };

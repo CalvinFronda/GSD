@@ -26,7 +26,7 @@ export const useFetchProjects = () => {
         })) as ProjectType[];
 
         const filteredTasks = projects.filter(
-          (project) => project.owner === user.uid,
+          (project) => project.owner === user.uid && !project.deletedAt,
         );
 
         setProject(filteredTasks);

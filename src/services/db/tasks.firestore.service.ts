@@ -46,7 +46,7 @@ class TasksFirestoreService extends FirestoreService {
       updatedAt: new Date().toISOString(),
     };
 
-    return this.update(taskId, updatedTask);
+    return await this.update(taskId, updatedTask);
   }
 
   async createTask(userId: string, data: TaskInputDialog) {
