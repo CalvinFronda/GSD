@@ -1,12 +1,11 @@
 import {
   Calendar,
-  Home,
-  Clock,
-  Inbox,
-  Clipboard,
-  FolderKanban,
-  Settings,
   CircleCheck,
+  Clipboard,
+  Clock,
+  FolderKanban,
+  Home,
+  Inbox,
   Sparkle,
 } from "lucide-react";
 

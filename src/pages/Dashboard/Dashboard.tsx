@@ -1,8 +1,8 @@
+import { useTaskStore } from "@/store/useTaskStore";
+
+import { useFetchTasks } from "@/hooks/useFetchTasks";
 import { TaskDialog } from "@/pages/Dashboard/children/addtaskdialog";
 import TaskCard from "@/pages/Dashboard/children/taskcard";
-
-import { useTaskStore } from "@/store/useTaskStore";
-import { useFetchTasks } from "@/hooks/useFetchTasks";
 
 export default function Dashboard() {
   const tasks = useTaskStore((s) => s.tasks);

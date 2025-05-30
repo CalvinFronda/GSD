@@ -1,8 +1,10 @@
-import FirestoreService from "./firestore.service";
+import { where } from "firebase/firestore";
+
 import { COLLECTIONS, TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 import { Task } from "@/models";
-import { TaskDifficulty, TaskWeight, TaskInputDialog } from "@/types";
-import { where } from "firebase/firestore";
+import { TaskDifficulty, TaskInputDialog, TaskWeight } from "@/types";
+
+import FirestoreService from "./firestore.service";
 
 class TasksFirestoreService extends FirestoreService {
   constructor() {

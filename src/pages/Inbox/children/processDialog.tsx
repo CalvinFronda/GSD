@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,8 +11,8 @@ import {
 } from "@/components/ui/dialog";
 
 import { TaskType } from "@/store/useTaskStore";
+
 import ProcessForm from "./processForm";
-import { useState } from "react";
 
 /**
     Dialog component used to display the edit task form

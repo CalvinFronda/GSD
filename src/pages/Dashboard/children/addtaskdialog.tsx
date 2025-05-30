@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,13 +9,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { z } from "zod";
-
 import TasksFirestoreService from "@/services/db/tasks.firestore.service";
 import FirebaseAuth from "@/services/firebase-auth.service";
+
+import { useTaskStore } from "@/store/useTaskStore";
+
 import TaskForm from "./taskform";
 import { taskSchema } from "./taskform";
-import { useTaskStore } from "@/store/useTaskStore";
 
 /**
  * TaskDialog Component

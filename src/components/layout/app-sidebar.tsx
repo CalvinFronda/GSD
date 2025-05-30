@@ -1,3 +1,15 @@
+import { ChevronUp, User2 } from "lucide-react";
+
+import { NavLink, useNavigate } from "react-router";
+
+import { signOut } from "firebase/auth";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -10,21 +22,11 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-import { NavLink, useNavigate } from "react-router"; // use NavLink here
-import { signOut } from "firebase/auth";
-import { auth } from "@/shared/firebase/client";
-import { sidebarItems } from "@/router/sidebarRoutes";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ChevronUp, User2 } from "lucide-react";
-import { cn } from "@/lib/utils"; // ShadCN utility
-
 import { useAuth } from "@/features/auth/authContext";
+
+import { cn } from "@/lib/utils";
+import { sidebarItems } from "@/router/sidebarRoutes";
+import { auth } from "@/shared/firebase/client";
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -56,7 +58,7 @@ export function AppSidebar() {
                           "flex items-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-colors w-full",
                           isActive
                             ? "bg-muted text-foreground"
-                            : "hover:bg-muted/50 text-muted-foreground"
+                            : "hover:bg-muted/50 text-muted-foreground",
                         )
                       }
                     >

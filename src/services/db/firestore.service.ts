@@ -1,20 +1,21 @@
-import { db } from "@/shared/firebase/client";
 import {
   CollectionReference,
+  DocumentData,
   Firestore,
-  collection,
+  QueryConstraint,
   addDoc,
+  collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
-  QueryConstraint,
   query,
-  DocumentData,
   updateDoc,
-  deleteDoc,
 } from "firebase/firestore";
+
 import { COLLECTIONS } from "@/constants/firestore.constants";
-import type { User, Task } from "@/models";
+import type { Task, User } from "@/models";
+import { db } from "@/shared/firebase/client";
 
 class FirestoreService {
   db: Firestore;

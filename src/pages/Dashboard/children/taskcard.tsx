@@ -1,3 +1,8 @@
+import { Settings } from "lucide-react";
+
+import { useEffect, useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -6,23 +11,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "../../../components/ui/button";
-
-import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
-import { TaskStatus } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { Settings } from "lucide-react";
 
 import { useTaskStore } from "@/store/useTaskStore";
-import AlertDialogButton from "@/components/layout/AlertDialog";
-import { useEffect, useState } from "react";
 import { TaskType } from "@/store/useTaskStore";
+
+import AlertDialogButton from "@/components/layout/AlertDialog";
+import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
+import { TaskStatus } from "@/types";
+
+import { Button } from "../../../components/ui/button";
 
 const isCompleted = (status: TaskStatus) =>
   status === TASK_STATUS_TYPE.COMPLETED;

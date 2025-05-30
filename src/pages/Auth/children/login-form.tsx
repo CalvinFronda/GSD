@@ -1,5 +1,9 @@
-import FirebaseAuthService from "@/services/firebase-auth.service";
-import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,11 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { useNavigate } from "react-router";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -20,6 +19,11 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+import FirebaseAuthService from "@/services/firebase-auth.service";
+
+import { cn } from "@/lib/utils";
 
 const loginSchema = z.object({
   email: z.string(),

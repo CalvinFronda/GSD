@@ -1,8 +1,10 @@
-import { Navigate, Outlet, useMatches, UIMatch } from "react-router";
-import { useInitApp } from "@/shared/firebase/client";
+import { Navigate, Outlet, UIMatch, useMatches } from "react-router";
+
 import Loader from "@/components/ui/loader";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+
 import { AppSidebar } from "@/components/layout/app-sidebar";
+import { useInitApp } from "@/shared/firebase/client";
 
 interface RouteData {
   title: string;
