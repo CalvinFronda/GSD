@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { onSnapshot, orderBy, query } from "firebase/firestore";
+import { onSnapshot, orderBy, query, where } from "firebase/firestore";
 
 import { TaskType, useTaskStore } from "@/store/useTaskStore";
 import { useAuth } from "@/features/auth/authContext";
@@ -14,7 +14,11 @@ export const useFetchTasks = () => {
     if (!user) return;
     const collectionRef = new TasksFirestoreService().collection;
 
-    const q = query(collectionRef, orderBy("createdAt", "desc"));
+    const q = query(
+      collectionRef,
+      where("owner", "==", user.uid),
+      orderBy("createdAt", "desc"),
+    );
     // Set up real-time listener
     const unsubscribe = onSnapshot(
       q,
@@ -24,9 +28,7 @@ export const useFetchTasks = () => {
           ...doc.data(),
         })) as TaskType[];
 
-        const filteredTasks = tasks.filter((task) => task.owner === user.uid);
-
-        setTasks(filteredTasks);
+        setTasks(tasks);
       },
       (error) => {
         console.error("Error listening to tasks:", error);
@@ -39,3 +41,43 @@ export const useFetchTasks = () => {
     };
   }, [user, setTasks]);
 };
+
+class Solution {
+  /**
+   * @param {string[]} strs
+   * @returns {string}
+   */
+  encode(strs) {
+    // result
+    let result = "";
+    // for every word in strs
+    for (let i = 0; i < strs.length; i++) {
+      // set the work + the length of str + # + the string
+      result += strs[i].length + "#" + strs[i];
+    }
+    return result;
+  }
+
+  /**
+   * @param {string} str
+   * @returns {string[]}
+   */
+  decode(str) {
+    const result = [];
+    let i = 0;
+
+    while (i < str.length) {
+      let j = i;
+      while (str[j] !== "#") {
+        j++;
+      }
+
+      const length = parseInt(str.slice(i, j), 10);
+      const s = str.slice(j + 1, j + 1 + length);
+      result.push(s);
+      i = j + 1 + length;
+    }
+
+    return result;
+  }
+}
