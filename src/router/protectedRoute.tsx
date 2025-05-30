@@ -25,7 +25,10 @@ const ProtectedPage = ({ isLoading }: { isLoading: boolean }) => {
       <SidebarProvider className="bg-gray-100">
         <AppSidebar />
         <main className="w-full">
-          {/* <SidebarTrigger /> */}
+          <div className="block md:hidden">
+            <SidebarTrigger />
+          </div>
+
           <header className="px-4 lg:px-6">
             <div className="flex flex-col gap-2 pt-5 pb-5">
               <h2 className="scroll-m-10 pb-1 text-3xl font-semibold tracking-tight first:mt-0">
@@ -35,7 +38,7 @@ const ProtectedPage = ({ isLoading }: { isLoading: boolean }) => {
             </div>
           </header>
           {!isLoading && (
-            <div className="px-4 lg:px-6 ">
+            <div className="p-4 lg:px-6 ">
               <Outlet />
             </div>
           )}
