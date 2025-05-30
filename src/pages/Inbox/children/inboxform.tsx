@@ -1,11 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
-import { useAuth } from "@/features/auth/authContext";
 import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -14,6 +12,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+import { useAuth } from "@/features/auth/authContext";
+
 import TasksFirestoreService from "@/services/db/tasks.firestore.service";
 
 const INBOX_PLACEHOLDER = "Add a new task, idea, or reminder...";

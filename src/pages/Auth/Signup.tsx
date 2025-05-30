@@ -1,19 +1,17 @@
-import FirebaseAuthService from "@/services/firebase-auth.service";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
+
+import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -21,7 +19,11 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { useNavigate } from "react-router";
+import { Input } from "@/components/ui/input";
+
+import FirebaseAuthService from "@/services/firebase-auth.service";
+
+import { cn } from "@/lib/utils";
 
 const signUpSchema = z.object({
   firstName: z.string(),

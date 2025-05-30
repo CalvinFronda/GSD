@@ -1,5 +1,4 @@
 import {
-  AlertDialog as ShadAlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
@@ -7,6 +6,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialog as ShadAlertDialog,
 } from "@/components/ui/alert-dialog";
 
 interface AlertDialog {

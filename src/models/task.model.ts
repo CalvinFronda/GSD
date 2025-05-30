@@ -1,4 +1,4 @@
-import type { TaskStatus, TaskDifficulty, TaskWeight } from "@/types/index";
+import type { TaskDifficulty, TaskStatus, TaskWeight } from "@/types/index";
 
 class Task {
   owner: string;
