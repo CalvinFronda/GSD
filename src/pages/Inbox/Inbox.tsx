@@ -1,32 +1,41 @@
 import { useState } from "react";
 
 import InboxItem from "@/components/ui/inbox-item";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { useTaskStore } from "@/store/useTaskStore";
 
+import {
+  INBOX_STORAGE_KEY,
+  getInitialShowAmount,
+} from "@/constants/localStorage";
 import { useFetchTasks } from "@/hooks/useFetchTasks";
 
 import InboxForm from "./children/inboxform";
 
-/**
- * TODO: Sorting, Multi select
- * Flow:
- * When clicking "checkbox" users can mass move or delete tasks
- * If ive made 3 tasks all related to work, i want to move them all to the work project
- */
-const SHOW_AMOUNT = 5;
+const SHOW_OPTIONS = [
+  { value: "5", label: "5 items" },
+  { value: "10", label: "10 items" },
+  { value: "20", label: "20 items" },
+  { value: "all", label: "Show all" },
+] as const;
 
 function Inbox() {
   const tasks = useTaskStore((s) => s.tasks);
   useFetchTasks();
   // Client side pagination
   const [currentPage, setCurrentPage] = useState(0);
+  const [showAmount, setShowAmount] = useState(getInitialShowAmount());
+  const totalPages = Math.ceil(tasks.length / showAmount);
+  const startIndex = currentPage * showAmount;
 
-  const totalPages = Math.ceil(tasks.length / SHOW_AMOUNT);
-  const startIndex = currentPage * SHOW_AMOUNT;
-  const endIndex = Math.min(startIndex + SHOW_AMOUNT, tasks.length);
-
-  const paginatedTasks = tasks.slice(startIndex, startIndex + SHOW_AMOUNT);
+  const paginatedTasks = tasks.slice(startIndex, startIndex + showAmount);
 
   const handleNext = () => {
     if (currentPage < totalPages - 1) {
@@ -40,6 +49,12 @@ function Inbox() {
     }
   };
 
+  const handleShowAmountChange = (value: string) => {
+    const newAmount = value === "all" ? tasks.length : parseInt(value);
+    setShowAmount(newAmount);
+    localStorage.setItem(INBOX_STORAGE_KEY, String(newAmount));
+    setCurrentPage(0);
+  };
   return (
     <div>
       <div className="flex flex-row justify-between bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-6">
@@ -59,9 +74,23 @@ function Inbox() {
         ))}
         <div className="px-4 py-3 bg-gray-50 text-right sm:px-6 border-t border-gray-200">
           <div className="flex justify-between items-center">
-            <div className="text-sm text-gray-500">
-              {" "}
-              Showing {startIndex + 1}–{endIndex} of {tasks.length} items
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-500">Show:</span>
+              <Select
+                defaultValue={String(showAmount)}
+                onValueChange={handleShowAmountChange}
+              >
+                <SelectTrigger className="w-[110px]">
+                  <SelectValue placeholder="Show" />
+                </SelectTrigger>
+                <SelectContent>
+                  {SHOW_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex space-x-2">
               <button
