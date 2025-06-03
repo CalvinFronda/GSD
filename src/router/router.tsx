@@ -1,15 +1,18 @@
 import { createBrowserRouter } from "react-router";
+import HomePage from "@/pages/Home/Home";
+import LoginPage from "@/pages/Auth/Login";
+import AuthLayout from "@/components/layout/AuthLayout";
+import Signup from "@/pages/Auth/Signup";
+import { ProtectedRoute } from "./protectedRoute";
+
+import NextActionPage from "@/pages/NextActions/NextAction";
 import InboxPage from "@/pages/Inbox/Inbox";
 
-import AuthLayout from "@/components/layout/AuthLayout";
+// import Inbox from "@/pages/Inbox/Inbox";
 // import Account from "@/pages/Account/Account";
-import LoginPage from "@/pages/Auth/Login";
-import Signup from "@/pages/Auth/Signup";
 // import Dashboard from "@/pages/Dashboard/Dashboard";
-import HomePage from "@/pages/Home/Home";
 // import Inbox from "@/pages/Inbox/Inbox";
 
-import { ProtectedRoute } from "./protectedRoute";
 
 import DashboardPage from "@/pages/Dashboard/Dashboard";
 import ProjectsPage from "@/pages/Projects/Projects";
@@ -56,6 +59,14 @@ export const router = createBrowserRouter([
         Component: InboxPage,
         loader: () => ({
           title: "Inbox",
+          description: "These are your all of your tasks.",
+        }),
+      },
+      {
+        path: "next-actions",
+        Component: NextActionPage,
+        loader: () => ({
+          title: "Next Actions",
           description:
             "These are your immediately actionable tasks. Focus on what you can do now.",
         }),
