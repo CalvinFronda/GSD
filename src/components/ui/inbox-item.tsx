@@ -2,7 +2,7 @@ import { BookMarked, FolderInput, TrashIcon } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { TaskType } from "@/store/useTaskStore";
+import { TaskType, useTaskStore } from "@/store/useTaskStore";
 
 import { timeAgo } from "@/lib/time";
 import { ProcessDialog } from "@/pages/Inbox/children/processDialog";
@@ -12,7 +12,13 @@ import { Button } from "./button";
 
 function InboxItem({ task }: { task: TaskType }) {
   const { title, description } = task.content;
-  const { createdAt } = task;
+  const { createdAt, id } = task;
+  const { deleteTask } = useTaskStore();
+
+  const handleDeleteTask = () => {
+    if (!id) return;
+    deleteTask(id);
+  };
 
   return (
     <li className="p-4 hover:bg-gray-50 transition-colors duration-150 list-none">
@@ -57,6 +63,7 @@ function InboxItem({ task }: { task: TaskType }) {
               className=" hover:text-red-500 transition-colors duration-200"
               variant="ghost"
               size="icon"
+              onClick={handleDeleteTask}
             >
               <TrashIcon />
             </Button>
