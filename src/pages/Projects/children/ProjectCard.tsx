@@ -1,21 +1,27 @@
-import { useEffect, useState } from "react";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
-import { Checkbox } from "@/components/ui/checkbox";
+import { z } from "zod";
+
+import { useEffect, useState } from "react";
+
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { ProjectType } from "@/store/useProjectStore";
-import TasksFirestoreService from "@/services/db/tasks.firestore.service";
+import { Progress } from "@/components/ui/progress";
+
 import { useAuth } from "@/features/auth/authContext";
+
+import TasksFirestoreService from "@/services/db/tasks.firestore.service";
+
+import { ProjectType } from "@/store/useProjectStore";
+import { TaskType, useTaskStore } from "@/store/useTaskStore";
+
 import {
   PROJECT_STATUS_TYPE,
   TASK_STATUS_TYPE,
 } from "@/constants/firestore.constants";
-
-import { TaskType, useTaskStore } from "@/store/useTaskStore";
 import { useFetchTasks } from "@/hooks/useFetchTasks";
+
 import ProjectCardHeader from "./ProjectCardHeader";
 
 const taskSchema = z.object({

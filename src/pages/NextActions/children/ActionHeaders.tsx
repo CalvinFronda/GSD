@@ -1,4 +1,4 @@
-import { Clock, Calendar } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
 
 export const DueTodayHeader = ({ count }: { count: number }) => {
   return (

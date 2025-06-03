@@ -1,9 +1,10 @@
 import { create } from "zustand";
-import { Project } from "@/models";
 
-import TasksFirestoreService from "@/services/db/tasks.firestore.service";
-import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 import ProjectsFirestoreService from "@/services/db/projects.firestore.service";
+import TasksFirestoreService from "@/services/db/tasks.firestore.service";
+
+import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
+import { Project } from "@/models";
 
 export interface ProjectType extends Project {
   id?: string;

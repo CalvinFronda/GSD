@@ -1,8 +1,10 @@
-import ProjectCard from "./children/ProjectCard";
-
-import { ProjectDialog } from "./children/ProjectDialog";
 import { useProjectStore } from "@/store/useProjectStore";
+
 import { useFetchProjects } from "@/hooks/useFetchProjects";
+
+import ProjectCard from "./children/ProjectCard";
+import { ProjectDialog } from "./children/ProjectDialog";
+
 /**
     Projects page 
  */

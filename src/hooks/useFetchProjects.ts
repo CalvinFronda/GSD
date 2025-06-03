@@ -1,9 +1,11 @@
 import { useEffect } from "react";
+
 import { onSnapshot, orderBy, query } from "firebase/firestore";
 
 import { useAuth } from "@/features/auth/authContext";
 
 import ProjectsFirestoreService from "@/services/db/projects.firestore.service";
+
 import { ProjectType, useProjectStore } from "@/store/useProjectStore";
 
 // Real time task event listener

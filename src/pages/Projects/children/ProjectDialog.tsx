@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,12 +9,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { z } from "zod";
-
-import FirebaseAuth from "@/services/firebase-auth.service";
-import ProjectForm, { projectSchema } from "./ProjectForm";
-import { useTaskStore } from "@/store/useTaskStore";
 import ProjectsFirestoreService from "@/services/db/projects.firestore.service";
+import FirebaseAuth from "@/services/firebase-auth.service";
+
+import { useTaskStore } from "@/store/useTaskStore";
+
+import ProjectForm, { projectSchema } from "./ProjectForm";
 
 /**
 

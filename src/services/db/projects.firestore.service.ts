@@ -1,9 +1,10 @@
-import FirestoreService from "./firestore.service";
-import { COLLECTIONS, TASK_STATUS_TYPE } from "@/constants/firestore.constants";
+import { where } from "firebase/firestore";
 
+import { COLLECTIONS, TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 import Project from "@/models/project.model";
 import { ProjectInputDialog } from "@/types";
-import { where } from "firebase/firestore";
+
+import FirestoreService from "./firestore.service";
 
 class ProjectsFirestoreService extends FirestoreService {
   constructor() {

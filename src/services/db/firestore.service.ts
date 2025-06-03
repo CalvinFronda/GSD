@@ -14,7 +14,7 @@ import {
 } from "firebase/firestore";
 
 import { COLLECTIONS } from "@/constants/firestore.constants";
-import { User, Task, Project } from "@/models";
+import { Project, Task, User } from "@/models";
 import { db } from "@/shared/firebase/client";
 
 class FirestoreService {

@@ -4,9 +4,9 @@ import { COLLECTIONS, TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 import { Task } from "@/models";
 import {
   TaskDifficulty,
-  TaskWeight,
   TaskInputDialog,
   TaskStatus,
+  TaskWeight,
 } from "@/types";
 
 import FirestoreService from "./firestore.service";
