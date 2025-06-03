@@ -1,9 +1,14 @@
 import { createBrowserRouter } from "react-router";
-import HomePage from "@/pages/Home/Home";
-import LoginPage from "@/pages/Auth/Login";
 import InboxPage from "@/pages/Inbox/Inbox";
+
 import AuthLayout from "@/components/layout/AuthLayout";
+// import Account from "@/pages/Account/Account";
+import LoginPage from "@/pages/Auth/Login";
 import Signup from "@/pages/Auth/Signup";
+// import Dashboard from "@/pages/Dashboard/Dashboard";
+import HomePage from "@/pages/Home/Home";
+// import Inbox from "@/pages/Inbox/Inbox";
+
 import { ProtectedRoute } from "./protectedRoute";
 
 import DashboardPage from "@/pages/Dashboard/Dashboard";

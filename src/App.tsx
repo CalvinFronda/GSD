@@ -1,9 +1,10 @@
 import { StrictMode } from "react";
-import "./App.css";
-import "./index.css";
 import { RouterProvider } from "react-router";
-import { router } from "./router/router.tsx";
+
+import "./App.css";
 import { AuthProvider } from "./features/auth/authContext.tsx";
+import "./index.css";
+import { router } from "./router/router.tsx";
 
 function App() {
   return (
