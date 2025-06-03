@@ -1,13 +1,14 @@
-import { COLLECTIONS } from "@/constants/firestore.constants";
-import { db, auth } from "@/shared/firebase/client";
-import { User } from "@/models";
 import {
   Auth,
+  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+
+import { COLLECTIONS } from "@/constants/firestore.constants";
+import { User } from "@/models";
+import { auth, db } from "@/shared/firebase/client";
 
 class FirebaseAuth {
   auth: Auth;

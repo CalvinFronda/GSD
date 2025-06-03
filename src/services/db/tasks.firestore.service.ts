@@ -1,8 +1,15 @@
-import FirestoreService from "./firestore.service";
+import { where } from "firebase/firestore";
+
 import { COLLECTIONS, TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 import { Task } from "@/models";
-import { TaskDifficulty, TaskWeight, TaskInputDialog } from "@/types";
-import { where } from "firebase/firestore";
+import {
+  TaskDifficulty,
+  TaskWeight,
+  TaskInputDialog,
+  TaskStatus,
+} from "@/types";
+
+import FirestoreService from "./firestore.service";
 
 class TasksFirestoreService extends FirestoreService {
   constructor() {
@@ -41,13 +48,14 @@ class TasksFirestoreService extends FirestoreService {
       updatedAt: new Date().toISOString(),
     };
 
-    return this.update(taskId, updatedTask);
+    return await this.update(taskId, updatedTask);
   }
 
   async createTask(userId: string, data: TaskInputDialog) {
     if (!userId) return;
     const task = new Task(
       userId,
+      (data.status as TaskStatus) || TASK_STATUS_TYPE.NOT_STARTED,
       data.dueDate || "",
       (data.difficulty as TaskDifficulty) || null,
       (data.weight as TaskWeight) || null,
@@ -55,8 +63,10 @@ class TasksFirestoreService extends FirestoreService {
       data.title,
       data.description || "",
       [],
+      data.projectId || "",
     );
-    return this.create(task.asObject());
+    this.create(task.asObject());
+    return task.asObject();
   }
 }
 

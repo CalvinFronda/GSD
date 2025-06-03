@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { onSnapshot, orderBy, query, where } from "firebase/firestore";
 
-import { TaskType, useTaskStore } from "@/store/useTaskStore";
 import { useAuth } from "@/features/auth/authContext";
+
 import TasksFirestoreService from "@/services/db/tasks.firestore.service";
+
+import { TaskType, useTaskStore } from "@/store/useTaskStore";
 
 // Real time task event listener
 export const useFetchTasks = () => {
@@ -32,7 +34,7 @@ export const useFetchTasks = () => {
       },
       (error) => {
         console.error("Error listening to tasks:", error);
-      }
+      },
     );
 
     // Cleanup
