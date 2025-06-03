@@ -1,10 +1,14 @@
+import { BookMarked, FolderInput, TrashIcon } from "lucide-react";
+
 import { Checkbox } from "@/components/ui/checkbox";
-import { FolderInput, TrashIcon, BookMarked } from "lucide-react";
-import { ProcessDialog } from "@/pages/Inbox/children/processDialog";
-import { Button } from "./button";
+
 import { TaskType } from "@/store/useTaskStore";
+
 import { timeAgo } from "@/lib/time";
+import { ProcessDialog } from "@/pages/Inbox/children/processDialog";
+
 import LocalToolTip from "./app-tooltip";
+import { Button } from "./button";
 
 function InboxItem({ task }: { task: TaskType }) {
   const { title, description } = task.content;

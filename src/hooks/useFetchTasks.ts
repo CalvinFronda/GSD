@@ -1,9 +1,12 @@
 import { useEffect } from "react";
+
 import { onSnapshot, orderBy, query } from "firebase/firestore";
 
-import { TaskType, useTaskStore } from "@/store/useTaskStore";
 import { useAuth } from "@/features/auth/authContext";
+
 import TasksFirestoreService from "@/services/db/tasks.firestore.service";
+
+import { TaskType, useTaskStore } from "@/store/useTaskStore";
 
 // Real time task event listener
 export const useFetchTasks = () => {

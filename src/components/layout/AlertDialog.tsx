@@ -1,5 +1,4 @@
 import {
-  AlertDialog as ShadAlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
@@ -7,6 +6,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialog as ShadAlertDialog,
 } from "@/components/ui/alert-dialog";
 
 interface AlertDialog {
@@ -22,8 +22,8 @@ const AlertDialog = ({ open, onOpenChange, onDelete }: AlertDialog) => {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            This action cannot be undone. This will permanently delete the task
+            and remove it from our server.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
