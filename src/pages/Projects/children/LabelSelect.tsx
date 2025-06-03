@@ -1,5 +1,3 @@
-"use client";
-
 import { Plus, X } from "lucide-react";
 
 import { useEffect, useRef, useState } from "react";
@@ -47,7 +45,6 @@ export const LabelSelect = ({ values, onChange }: LabelSelectProps) => {
   }, [open]);
 
   const toggleValue = (label: string) => {
-    console.log("label", label);
     if (values.includes(label)) {
       onChange(values.filter((v) => v !== label));
     } else {

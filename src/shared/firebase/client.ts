@@ -63,7 +63,7 @@ function useInitFirebase() {
             setUserData(userDoc.data() as UserDataType);
           }
         } catch (error) {
-          console.log("Error fetching user data:", error);
+          console.error("Error fetching user data:", error);
         }
       } else {
         setUser(null);

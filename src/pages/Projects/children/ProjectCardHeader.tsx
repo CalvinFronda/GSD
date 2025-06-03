@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-// adjust if custom
 import { Check, Pencil, Trash, X } from "lucide-react";
 import { z } from "zod";
 
@@ -80,7 +79,6 @@ export default function ProjectCardHeader({
       dueDate: data.dueDate?.toISOString() || null,
       updatedAt: new Date().toISOString(),
     });
-
     setIsEditing(false);
   };
 
@@ -89,90 +87,89 @@ export default function ProjectCardHeader({
     deleteProject(id);
   };
 
+  const renderNormalView = () => (
+    <>
+      <div className="flex justify-between items-start">
+        <h3 className="font-medium text-lg">{title}</h3>
+        <div className="flex gap-1">
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={() => setIsEditing(true)}
+          >
+            <Pencil />
+          </Button>
+          <AlertDialogTrigger asChild>
+            <Button size="icon" variant="ghost">
+              <Trash />
+            </Button>
+          </AlertDialogTrigger>
+        </div>
+      </div>
+
+      <div className="mt-2 flex items-center gap-2 flex-wrap">
+        {labels?.map((label, i) => (
+          <div
+            key={i}
+            className="bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full"
+          >
+            {label}
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-2 text-sm">
+        {dueDate
+          ? `Due: ${new Date(dueDate).toLocaleDateString()}`
+          : "No due date"}
+      </div>
+
+      <CardDescription>
+        {description || <div className="min-h-[1.25rem]">&nbsp;</div>}
+      </CardDescription>
+    </>
+  );
+
+  const renderEditView = () => (
+    <>
+      <div className="flex justify-between items-start">
+        <Input {...register("title")} />
+        <div className="flex gap-1">
+          <Button size="icon" variant="ghost" onClick={handleSubmit(onSubmit)}>
+            <Check />
+          </Button>
+          <Button size="icon" variant="ghost" onClick={handleCancel}>
+            <X />
+          </Button>
+        </div>
+      </div>
+
+      <div className="mt-2">
+        <LabelSelect
+          values={watch("labels")}
+          onChange={(newLabels) => setValue("labels", newLabels)}
+        />
+      </div>
+
+      <div className="mt-2 text-sm">
+        <DatePicker
+          value={watch("dueDate")}
+          onChange={(date) => setValue("dueDate", date)}
+        />
+      </div>
+
+      <CardDescription>
+        <Textarea {...register("description")} />
+      </CardDescription>
+    </>
+  );
+
   return (
     <AlertDialog>
       <CardHeader>
         <CardTitle>
-          <div className="flex justify-between items-start ">
-            {isEditing ? (
-              <Input {...register("title")} />
-            ) : (
-              <h3 className="font-medium text-lg">{title}</h3>
-            )}
-            <div className="flex gap-1">
-              {isEditing ? (
-                <>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={handleSubmit(onSubmit)}
-                  >
-                    <Check />
-                  </Button>
-                  <Button size="icon" variant="ghost" onClick={handleCancel}>
-                    <X />
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => setIsEditing(true)}
-                  >
-                    <Pencil />
-                  </Button>
-                  <Button size="icon" variant="ghost">
-                    <AlertDialogTrigger>
-                      <Trash />
-                    </AlertDialogTrigger>
-                  </Button>
-                </>
-              )}
-            </div>
-          </div>
-          <div className="mt-2 flex items-center gap-2 flex-wrap">
-            {isEditing ? (
-              <LabelSelect
-                values={watch("labels")}
-                onChange={(newLabels) => setValue("labels", newLabels)}
-              />
-            ) : (
-              <>
-                {labels?.map((label, i) => (
-                  <div
-                    key={i}
-                    className="bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full"
-                  >
-                    {label}
-                  </div>
-                ))}
-              </>
-            )}
-          </div>
-          <div className="mt-2 text-sm">
-            {isEditing ? (
-              <DatePicker
-                value={watch("dueDate")}
-                onChange={(date) => setValue("dueDate", date)}
-              />
-            ) : dueDate ? (
-              `Due: ${new Date(dueDate).toLocaleDateString()}`
-            ) : (
-              "No due date"
-            )}
-          </div>
+          {isEditing ? renderEditView() : renderNormalView()}
         </CardTitle>
-
-        <CardDescription>
-          {isEditing ? (
-            <Textarea {...register("description")} />
-          ) : description ? (
-            description
-          ) : (
-            <div className="min-h-[1.25rem]">&nbsp;</div>
-          )}
-        </CardDescription>
       </CardHeader>
 
       <AlertDialogContent>
