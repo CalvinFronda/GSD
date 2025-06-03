@@ -14,16 +14,19 @@ import {
 } from "firebase/firestore";
 
 import { COLLECTIONS } from "@/constants/firestore.constants";
-import type { Task, User } from "@/models";
+import { User, Task, Project } from "@/models";
 import { db } from "@/shared/firebase/client";
 
 class FirestoreService {
   db: Firestore;
   collectionName: keyof typeof COLLECTIONS;
   collection: CollectionReference;
-  model: typeof User | typeof Task;
+  model: typeof User | typeof Task | typeof Project;
 
-  constructor(collectionName: string, model: typeof User | typeof Task) {
+  constructor(
+    collectionName: string,
+    model: typeof User | typeof Task | typeof Project,
+  ) {
     this.db = db;
     this.collectionName = collectionName as keyof typeof COLLECTIONS;
     this.collection = collection(this.db, collectionName);

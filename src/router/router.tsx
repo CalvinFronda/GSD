@@ -1,16 +1,20 @@
 import { createBrowserRouter } from "react-router";
+import InboxPage from "@/pages/Inbox/Inbox";
 
 import AuthLayout from "@/components/layout/AuthLayout";
-import Account from "@/pages/Account/Account";
+// import Account from "@/pages/Account/Account";
 import LoginPage from "@/pages/Auth/Login";
 import Signup from "@/pages/Auth/Signup";
-import Dashboard from "@/pages/Dashboard/Dashboard";
+// import Dashboard from "@/pages/Dashboard/Dashboard";
 import HomePage from "@/pages/Home/Home";
-import Inbox from "@/pages/Inbox/Inbox";
+// import Inbox from "@/pages/Inbox/Inbox";
 
 import { ProtectedRoute } from "./protectedRoute";
 
-const Projects = () => <div>hello</div>;
+import DashboardPage from "@/pages/Dashboard/Dashboard";
+import ProjectsPage from "@/pages/Projects/Projects";
+
+import AccountPage from "@/pages/Account/Account";
 
 function headerLoader(title: string, description: string) {
   return {
@@ -44,29 +48,29 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "dashboard",
-        Component: Dashboard,
+        Component: DashboardPage,
         loader: () => headerLoader("Dashboard", "This is the main page"),
       },
       {
         path: "inbox",
-        Component: Inbox,
+        Component: InboxPage,
         loader: () => ({
           title: "Inbox",
           description:
-            "These are your immediately actionable tasks. Focus on what you can do now. ",
+            "These are your immediately actionable tasks. Focus on what you can do now.",
         }),
       },
       {
         path: "projects",
-        Component: Projects,
+        Component: ProjectsPage,
         loader: () => ({
           title: "Projects",
-          description: "Projects Page",
+          description: "Track your progress on larger initiatives.",
         }),
       },
       {
         path: "account",
-        Component: Account,
+        Component: AccountPage,
         loader: () => ({ title: "Settings" }),
       },
     ],
