@@ -1,21 +1,24 @@
 "use client";
 
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
+import { Plus, X } from "lucide-react";
+
+import { useEffect, useRef, useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Command,
-  CommandInput,
-  CommandItem,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
+  CommandItem,
 } from "@/components/ui/command";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { X, Plus } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
 import { cn } from "@/lib/utils";
 
 const defaultLabels = ["Easy", "Medium", "Hard", "Very Hard"];

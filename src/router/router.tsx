@@ -1,23 +1,21 @@
 import { createBrowserRouter } from "react-router";
-import HomePage from "@/pages/Home/Home";
-import LoginPage from "@/pages/Auth/Login";
+
 import AuthLayout from "@/components/layout/AuthLayout";
+import AccountPage from "@/pages/Account/Account";
+import LoginPage from "@/pages/Auth/Login";
 import Signup from "@/pages/Auth/Signup";
-import { ProtectedRoute } from "./protectedRoute";
-
-import NextActionPage from "@/pages/NextActions/NextAction";
-import InboxPage from "@/pages/Inbox/Inbox";
-
 // import Inbox from "@/pages/Inbox/Inbox";
 // import Account from "@/pages/Account/Account";
 // import Dashboard from "@/pages/Dashboard/Dashboard";
 // import Inbox from "@/pages/Inbox/Inbox";
 
-
 import DashboardPage from "@/pages/Dashboard/Dashboard";
+import HomePage from "@/pages/Home/Home";
+import InboxPage from "@/pages/Inbox/Inbox";
+import NextActionPage from "@/pages/NextActions/NextAction";
 import ProjectsPage from "@/pages/Projects/Projects";
 
-import AccountPage from "@/pages/Account/Account";
+import { ProtectedRoute } from "./protectedRoute";
 
 function headerLoader(title: string, description: string) {
   return {

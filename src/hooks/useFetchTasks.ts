@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+
 import { onSnapshot, orderBy, query, where } from "firebase/firestore";
 
 import { useAuth } from "@/features/auth/authContext";
@@ -19,7 +20,7 @@ export const useFetchTasks = () => {
     const q = query(
       collectionRef,
       where("owner", "==", user.uid),
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "desc"),
     );
     // Set up real-time listener
     const unsubscribe = onSnapshot(

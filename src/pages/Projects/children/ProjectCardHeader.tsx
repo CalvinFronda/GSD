@@ -1,17 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+// adjust if custom
+import { Check, Pencil, Trash, X } from "lucide-react";
+import { z } from "zod";
+
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { DatePicker } from "@/components/ui/date-picker"; // adjust if custom
-import { Pencil, Trash, Check, X } from "lucide-react";
-import { ProjectType, useProjectStore } from "@/store/useProjectStore";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,8 +19,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { LabelSelect } from "./LabelSelect";
+import { Button } from "@/components/ui/button";
+import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { DatePicker } from "@/components/ui/date-picker";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+
 import ProjectsFirestoreService from "@/services/db/projects.firestore.service";
+
+import { ProjectType, useProjectStore } from "@/store/useProjectStore";
+
+import { LabelSelect } from "./LabelSelect";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
