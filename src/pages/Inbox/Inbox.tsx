@@ -11,6 +11,7 @@ import {
 
 import { useTaskStore } from "@/store/useTaskStore";
 
+import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 import {
   INBOX_STORAGE_KEY,
   getInitialShowAmount,
@@ -29,13 +30,26 @@ const SHOW_OPTIONS = [
 function Inbox() {
   const tasks = useTaskStore((s) => s.tasks);
   useFetchTasks();
+  // Tasks that have been "processed" shouldn't be here
+  const filteredTasks = tasks.filter(
+    (task) =>
+      !task.dueDate ||
+      !task.difficulty ||
+      !task.weight ||
+      task.projectId ||
+      task.status === TASK_STATUS_TYPE.NOT_STARTED,
+  );
+
   // Client side pagination
   const [currentPage, setCurrentPage] = useState(0);
   const [showAmount, setShowAmount] = useState(getInitialShowAmount());
-  const totalPages = Math.ceil(tasks.length / showAmount);
+  const totalPages = Math.ceil(filteredTasks.length / showAmount);
   const startIndex = currentPage * showAmount;
 
-  const paginatedTasks = tasks.slice(startIndex, startIndex + showAmount);
+  const paginatedTasks = filteredTasks.slice(
+    startIndex,
+    startIndex + showAmount,
+  );
 
   const handleNext = () => {
     if (currentPage < totalPages - 1) {
@@ -50,7 +64,7 @@ function Inbox() {
   };
 
   const handleShowAmountChange = (value: string) => {
-    const newAmount = value === "all" ? tasks.length : parseInt(value);
+    const newAmount = value === "all" ? filteredTasks.length : parseInt(value);
     setShowAmount(newAmount);
     localStorage.setItem(INBOX_STORAGE_KEY, String(newAmount));
     setCurrentPage(0);
@@ -63,7 +77,7 @@ function Inbox() {
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
           <h3 className="font-medium text-gray-700">
-            Unproccesed Items ({tasks.length})
+            Unproccesed Items ({filteredTasks.length})
           </h3>
           <div className="flex items-center space-x-2">
             {/* <Button>Process All</Button> */}
