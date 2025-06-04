@@ -3,6 +3,7 @@ type TaskStatus =
   | "IN_PROGRESS"
   | "COMPLETED"
   | "WAITING"
+  | "SOMEDAY"
   | "ARCHIVED";
 
 type TaskDifficulty = 1 | 2 | 3 | 4;

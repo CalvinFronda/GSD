@@ -17,8 +17,8 @@ type TaskStoreTypes = {
   dialogMode: "create" | "edit";
   addTask: (tasks: TaskType) => void;
   setTasks: (tasks: TaskType[]) => void;
+  updateTaskState: (task: TaskType, state: string) => void;
   deleteTask: (taskId: string) => void;
-  archiveTask: (taskId: TaskType) => void;
   duplicateTask: (taskId: TaskType) => void;
   openTaskDialog: (task?: Task) => void;
   closeTaskDialog: () => void;
@@ -37,18 +37,18 @@ export const useTaskStore = create<TaskStoreTypes>((set) => ({
       tasks: [...state.tasks, task],
     })),
   setTasks: (tasks) => set({ tasks }),
-  deleteTask: async (taskId) => {
-    const service = new TasksFirestoreService();
-    return await service.deleteTaskById(taskId);
-  },
-  archiveTask: async (task) => {
+  updateTaskState: async (task, state) => {
     const service = new TasksFirestoreService();
     if (task.id) {
       return await service.update(task.id, {
         updatedAt: now,
-        status: TASK_STATUS_TYPE.ARCHIVED,
+        status: state,
       });
     }
+  },
+  deleteTask: async (taskId) => {
+    const service = new TasksFirestoreService();
+    return await service.deleteTaskById(taskId);
   },
   duplicateTask: async (task) => {
     const service = new TasksFirestoreService();

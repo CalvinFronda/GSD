@@ -14,6 +14,7 @@ import HomePage from "@/pages/Home/Home";
 import InboxPage from "@/pages/Inbox/Inbox";
 import NextActionPage from "@/pages/NextActions/NextAction";
 import ProjectsPage from "@/pages/Projects/Projects";
+import SomedayPage from "@/pages/Someday/Someday";
 
 import { ProtectedRoute } from "./protectedRoute";
 
@@ -75,6 +76,15 @@ export const router = createBrowserRouter([
         loader: () => ({
           title: "Projects",
           description: "Track your progress on larger initiatives.",
+        }),
+      },
+      {
+        path: "someday",
+        Component: SomedayPage,
+        loader: () => ({
+          title: "Someday/Maybe",
+          description:
+            "Maybe you just don't have time right now. Track it and work on it when you have more time!",
         }),
       },
       {

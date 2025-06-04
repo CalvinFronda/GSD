@@ -2,8 +2,9 @@ import { BookMarked, FolderInput, TrashIcon } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { TaskType } from "@/store/useTaskStore";
+import { TaskType, useTaskStore } from "@/store/useTaskStore";
 
+import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 import { timeAgo } from "@/lib/time";
 import { ProcessDialog } from "@/pages/Inbox/children/processDialog";
 
@@ -13,6 +14,11 @@ import { Button } from "./button";
 function InboxItem({ task }: { task: TaskType }) {
   const { title, description } = task.content;
   const { createdAt } = task;
+  const { updateTaskState } = useTaskStore();
+
+  const handleSendSomeday = () => {
+    updateTaskState(task, TASK_STATUS_TYPE.SOMEDAY);
+  };
 
   return (
     <li className="p-4 hover:bg-gray-50 transition-colors duration-150 list-none">
@@ -39,6 +45,7 @@ function InboxItem({ task }: { task: TaskType }) {
               className="hover:text-blue-500 transition-colors duration-200"
               variant="ghost"
               size="icon"
+              onClick={() => handleSendSomeday()}
             >
               <FolderInput />
             </Button>
