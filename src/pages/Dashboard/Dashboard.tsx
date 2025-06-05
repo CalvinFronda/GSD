@@ -1,8 +1,11 @@
+import { isThisWeek, isToday, parseISO } from "date-fns";
 import { Clipboard, InboxIcon } from "lucide-react";
 
+import { useProjectStore } from "@/store/useProjectStore";
 import { useTaskStore } from "@/store/useTaskStore";
 
 import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
+import { useFetchProjects } from "@/hooks/useFetchProjects";
 import { useFetchTasks } from "@/hooks/useFetchTasks";
 
 import { TaskDistro, WeeklyTaskChart } from "./children/DashboardCharts";
@@ -13,11 +16,24 @@ import TopDashboardWidget from "./children/TopDashboardWidget";
 
 export default function Dashboard() {
   const tasks = useTaskStore((s) => s.tasks);
-
+  const projects = useProjectStore((s) => s.projects);
   useFetchTasks();
+  useFetchProjects();
 
-  const inbox = tasks.filter(
-    (task) => task.status === TASK_STATUS_TYPE.NOT_STARTED,
+  const dueToday = tasks.filter(
+    (task) => task.dueDate && isToday(parseISO(task.dueDate)),
+  );
+
+  // tasks that are due within this week and not due today
+  const dueThisWeek = tasks.filter((task) => {
+    if (!task.dueDate) return false;
+
+    const date = parseISO(task.dueDate);
+    return isThisWeek(date, { weekStartsOn: 1 }) && !isToday(date);
+  });
+
+  const waitingFor = tasks.filter(
+    (task) => task.status === TASK_STATUS_TYPE.WAITING,
   );
 
   return (
@@ -25,27 +41,27 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <TopDashboardWidget
           title="Inbox"
-          count={inbox.length}
+          count={tasks.length}
           Icon={<InboxIcon className="text-blue-500" />}
           meta={{ color: "red", text: "unprocessed", count: 0 }}
         />
         <TopDashboardWidget
           title="Next Actions"
-          count={inbox.length}
+          count={dueToday.length + dueThisWeek.length}
           Icon={<Clipboard className="text-green-500" />}
-          meta={{ color: "green", text: "Due today", count: 3 }}
+          meta={{ color: "green", text: "Due today", count: dueToday.length }}
         />
         <TopDashboardWidget
           title="Projects"
-          count={inbox.length}
+          count={projects.length}
           Icon={<Clipboard className="text-purple-500" />}
-          meta={{ color: "purple", text: "Active", count: 3 }}
+          meta={{ color: "purple", text: "Active", count: projects.length }}
         />
         <TopDashboardWidget
           title="Waiting For"
-          count={inbox.length}
+          count={waitingFor.length}
           Icon={<Clipboard className="text-yellow-500" />}
-          meta={{ color: "yellow", text: "Active", count: 3 }}
+          meta={{ color: "yellow", text: "Active", count: waitingFor.length }}
         />
       </div>
 

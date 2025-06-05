@@ -25,22 +25,14 @@ const NextAction = () => {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-lg border border-gray-200/30 overflow-hidden">
-        <DueTodayHeader count={3} />
-        {dueToday.map(({ content, dueDate }, i) => (
-          <ActionCard
-            key={i}
-            title={content.title}
-            description={content.description}
-            dueDate={dueDate}
-            project={"None"}
-          />
-        ))}
-      </div>
-      <div className="bg-white rounded-lg border border-gray-200/30 overflow-hidden">
-        <UpcomingHeader count={5} />
-        <div className="divide-y divide-gray-200/20">
-          {dueThisWeek.map(({ content, dueDate }, i) => (
+      {dueToday.length === 0 && dueThisWeek.length === 0 && (
+        <div>No new tasks</div>
+      )}
+
+      {dueToday.length !== 0 && (
+        <div className="bg-white rounded-lg border border-gray-200/30 overflow-hidden">
+          <DueTodayHeader count={dueToday.length} />
+          {dueToday.map(({ content, dueDate }, i) => (
             <ActionCard
               key={i}
               title={content.title}
@@ -50,7 +42,24 @@ const NextAction = () => {
             />
           ))}
         </div>
-      </div>
+      )}
+
+      {dueThisWeek.length !== 0 && (
+        <div className="bg-white rounded-lg border border-gray-200/30 overflow-hidden">
+          <UpcomingHeader count={dueThisWeek.length} />
+          <div className="divide-y divide-gray-200/20">
+            {dueThisWeek.map(({ content, dueDate }, i) => (
+              <ActionCard
+                key={i}
+                title={content.title}
+                description={content.description}
+                dueDate={dueDate}
+                project={"None"}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

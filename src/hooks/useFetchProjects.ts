@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { onSnapshot, orderBy, query } from "firebase/firestore";
+import { onSnapshot, orderBy, query, where } from "firebase/firestore";
 
 import { useAuth } from "@/features/auth/authContext";
 
@@ -17,7 +17,12 @@ export const useFetchProjects = () => {
     if (!user) return;
     const collectionRef = new ProjectsFirestoreService().collection;
 
-    const q = query(collectionRef, orderBy("createdAt", "desc"));
+    const q = query(
+      collectionRef,
+      where("owner", "==", user.uid),
+      where("deletedAt", "==", null),
+      orderBy("createdAt", "desc"),
+    );
     // Set up real-time listener
     const unsubscribe = onSnapshot(
       q,
@@ -27,11 +32,7 @@ export const useFetchProjects = () => {
           ...doc.data(),
         })) as ProjectType[];
 
-        const filteredTasks = projects.filter(
-          (project) => project.owner === user.uid && !project.deletedAt,
-        );
-
-        setProject(filteredTasks);
+        setProject(projects);
       },
       (error) => {
         console.error("Error listening to tasks:", error);
