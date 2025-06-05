@@ -29,6 +29,8 @@ import FirebaseAuth from "@/services/firebase-auth.service";
 
 import { TaskType } from "@/store/useTaskStore";
 
+import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
+
 export const taskSchema = z.object({
   title: z.string(),
   dueDate: z.string(),
@@ -63,7 +65,18 @@ const ProcessForm = ({ initialData, handleOpen }: ProcessForm) => {
         throw new Error("User not authenticated");
       }
       if (initialData.id) {
-        await taskFirestoreService.updateTask(initialData.id, validatedData);
+        const isFullyProcessed = Object.values(validatedData).every(
+          (value) => value !== null && value !== undefined && value !== "",
+        );
+
+        const updatedTask = {
+          ...validatedData,
+          status: isFullyProcessed
+            ? TASK_STATUS_TYPE.IN_PROGRESS
+            : TASK_STATUS_TYPE.NOT_STARTED,
+        };
+
+        await taskFirestoreService.updateTask(initialData.id, updatedTask);
       }
     } catch (error) {
       console.error("Error handling task submission:", error);

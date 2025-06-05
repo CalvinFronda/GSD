@@ -45,6 +45,7 @@ class TasksFirestoreService extends FirestoreService {
       dueDate: data.dueDate,
       difficulty: data.difficulty,
       weight: data.weight,
+      status: data?.status,
       updatedAt: new Date().toISOString(),
     };
 

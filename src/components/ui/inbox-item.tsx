@@ -14,10 +14,15 @@ import { Button } from "./button";
 function InboxItem({ task }: { task: TaskType }) {
   const { title, description } = task.content;
   const { createdAt } = task;
-  const { updateTaskState } = useTaskStore();
+  const { updateTaskState, deleteTask } = useTaskStore();
 
   const handleSendSomeday = () => {
     updateTaskState(task, TASK_STATUS_TYPE.SOMEDAY);
+  };
+
+  const handleDeleteTask = () => {
+    if (!task.id) return;
+    deleteTask(task.id);
   };
 
   return (
@@ -64,6 +69,7 @@ function InboxItem({ task }: { task: TaskType }) {
               className=" hover:text-red-500 transition-colors duration-200"
               variant="ghost"
               size="icon"
+              onClick={handleDeleteTask}
             >
               <TrashIcon />
             </Button>
