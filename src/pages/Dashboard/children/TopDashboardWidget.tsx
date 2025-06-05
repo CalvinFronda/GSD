@@ -24,7 +24,7 @@ const TopDashboardWidget = ({
   const route = title.toLowerCase().replace(/\s+/g, "-");
   return (
     <Card
-      className="bg-white rounded-lg border border-gray-200/30 p-6 hover:border-gray-200/40 transition-colors duration-300"
+      className="bg-white rounded-lg border border-gray-200/30 p-6 hover:border-gray-200/40 transition-colors duration-300 cursor-pointer"
       onClick={() => navigate(`/${route}`)}
     >
       <div className="flex items-center justify-between mb-4">
