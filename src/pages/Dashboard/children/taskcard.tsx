@@ -38,7 +38,7 @@ const TaskCard = ({ task }: { task: TaskType }) => {
   const {
     openTaskDialog,
     deleteTask,
-    archiveTask,
+    updateTaskState,
     duplicateTask,
     closeTaskDialog,
   } = useTaskStore();
@@ -62,7 +62,7 @@ const TaskCard = ({ task }: { task: TaskType }) => {
   };
 
   const handleArchive = () => {
-    archiveTask(task);
+    updateTaskState(task, TASK_STATUS_TYPE.ARCHIVED);
     setIsDropdownOpen(false);
   };
 

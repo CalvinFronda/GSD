@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { TaskType, useTaskStore } from "@/store/useTaskStore";
 
+import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 import { timeAgo } from "@/lib/time";
 import { ProcessDialog } from "@/pages/Inbox/children/processDialog";
 
@@ -12,12 +13,16 @@ import { Button } from "./button";
 
 function InboxItem({ task }: { task: TaskType }) {
   const { title, description } = task.content;
-  const { createdAt, id } = task;
-  const { deleteTask } = useTaskStore();
+  const { createdAt } = task;
+  const { updateTaskState, deleteTask } = useTaskStore();
+
+  const handleSendSomeday = () => {
+    updateTaskState(task, TASK_STATUS_TYPE.SOMEDAY);
+  };
 
   const handleDeleteTask = () => {
-    if (!id) return;
-    deleteTask(id);
+    if (!task.id) return;
+    deleteTask(task.id);
   };
 
   return (
@@ -45,6 +50,7 @@ function InboxItem({ task }: { task: TaskType }) {
               className="hover:text-blue-500 transition-colors duration-200"
               variant="ghost"
               size="icon"
+              onClick={() => handleSendSomeday()}
             >
               <FolderInput />
             </Button>
