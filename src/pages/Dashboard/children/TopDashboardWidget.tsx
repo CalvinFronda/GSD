@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router";
+
 import { Card } from "@/components/ui/card";
 
 interface TopDashboardWidgetProps {
@@ -17,8 +19,14 @@ const TopDashboardWidget = ({
   Icon,
   meta,
 }: TopDashboardWidgetProps) => {
+  const navigate = useNavigate();
+  // takes the title of the page, makes it lowercase and adds a "-" if theres a space
+  const route = title.toLowerCase().replace(/\s+/g, "-");
   return (
-    <Card className="bg-white rounded-lg border border-gray-200/30 p-6 hover:border-gray-200/40 transition-colors duration-300">
+    <Card
+      className="bg-white rounded-lg border border-gray-200/30 p-6 hover:border-gray-200/40 transition-colors duration-300 cursor-pointer"
+      onClick={() => navigate(`/${route}`)}
+    >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-medium text-gray-500">{title}</h3>
         {Icon}
