@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,11 @@ function InboxForm() {
   const { user } = useAuth();
   const taskFirestoreService = new TasksFirestoreService();
 
+  // Throttle button to prevent multiple submissions
+  const [throttleButton, setThrottleButton] = useState(false);
+
   const handleInboxSubmit = async (values: z.input<typeof inputSchema>) => {
+    setThrottleButton(true);
     try {
       const validatedData = inputSchema.parse(values);
 
@@ -41,6 +46,7 @@ function InboxForm() {
       console.error("Error handling task submission:", error);
     } finally {
       inputForm.reset();
+      setThrottleButton(false);
     }
   };
 
@@ -67,7 +73,15 @@ function InboxForm() {
                 <div className="flex justify-center">
                   <Input placeholder={INBOX_PLACEHOLDER} {...field} />
                   <div className="pl-10">
-                    <Button>Add to Inbox</Button>
+                    <Button
+                      // adding a throttle to prevent multiple submissions
+                      disabled={
+                        throttleButton ||
+                        inputForm.getValues("title").length === 0
+                      }
+                    >
+                      Add to Inbox
+                    </Button>
                   </div>
                 </div>
               </FormControl>
