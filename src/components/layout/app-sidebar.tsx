@@ -32,7 +32,6 @@ import {
 
 import { useAuth } from "@/features/auth/authContext";
 
-import { cn } from "@/lib/utils";
 import { sidebarItems } from "@/router/sidebarRoutes";
 import { auth } from "@/shared/firebase/client";
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import InboxItem from "@/components/ui/inbox-item";
 import {
@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useTaskStore } from "@/store/useTaskStore";
+import { TaskType, useTaskStore } from "@/store/useTaskStore";
 
 import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 import {
@@ -27,22 +27,37 @@ const SHOW_OPTIONS = [
   { value: "all", label: "Show all" },
 ] as const;
 
-function Inbox() {
+function Inbox({ filterType }: { filterType: string }) {
   const tasks = useTaskStore((s) => s.tasks);
-  useFetchTasks();
-  // Tasks that have been "processed" shouldn't be here
-  const filteredTasks = tasks.filter(
-    (task) =>
-      !task.dueDate ||
-      !task.difficulty ||
-      !task.weight ||
-      task.projectId ||
-      task.status === TASK_STATUS_TYPE.NOT_STARTED,
-  );
-
-  // Client side pagination
   const [currentPage, setCurrentPage] = useState(0);
   const [showAmount, setShowAmount] = useState(getInitialShowAmount());
+  useFetchTasks();
+
+  const filteredTasks = useMemo(() => {
+    if (filterType === "all") return tasks;
+
+    if (filterType === "unprocessed") {
+      return tasks.filter(
+        (task) =>
+          !task.dueDate ||
+          !task.difficulty ||
+          !task.weight ||
+          !task.projectId ||
+          task.status === TASK_STATUS_TYPE.NOT_STARTED,
+      );
+    }
+
+    // Processed
+    return tasks.filter(
+      (task) =>
+        task.dueDate &&
+        task.difficulty &&
+        task.weight &&
+        !task.projectId &&
+        task.status !== TASK_STATUS_TYPE.NOT_STARTED,
+    );
+  }, [tasks, filterType]);
+
   const totalPages = Math.ceil(filteredTasks.length / showAmount);
   const startIndex = currentPage * showAmount;
 
@@ -77,11 +92,9 @@ function Inbox() {
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
           <h3 className="font-medium text-gray-700">
-            Unproccesed Items ({filteredTasks.length})
+            {filterType.charAt(0).toLocaleUpperCase() + filterType.slice(1)}{" "}
+            Items ({filteredTasks.length})
           </h3>
-          <div className="flex items-center space-x-2">
-            {/* <Button>Process All</Button> */}
-          </div>
         </div>
         {paginatedTasks.map((task, i) => (
           <InboxItem key={i} task={task} />
