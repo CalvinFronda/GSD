@@ -6,6 +6,9 @@ import {
   FolderKanban,
   Home,
   Inbox,
+  MailCheck,
+  MailPlus,
+  Mails,
   Sparkle,
 } from "lucide-react";
 
@@ -18,7 +21,12 @@ export const sidebarItems = [
   {
     title: "Inbox",
     url: "/inbox",
-    icon: Inbox,
+    icon: Mails,
+    subItems: [
+      { title: "All", url: "/inbox", icon: Inbox },
+      { title: "Processed", url: "/processed", icon: MailPlus },
+      { title: "Unproccesed", url: "/unproccesed", icon: MailCheck },
+    ],
   },
   {
     title: "Next Actions",

@@ -4,11 +4,6 @@ import AuthLayout from "@/components/layout/AuthLayout";
 import AccountPage from "@/pages/Account/Account";
 import LoginPage from "@/pages/Auth/Login";
 import Signup from "@/pages/Auth/Signup";
-// import Inbox from "@/pages/Inbox/Inbox";
-// import Account from "@/pages/Account/Account";
-// import Dashboard from "@/pages/Dashboard/Dashboard";
-// import Inbox from "@/pages/Inbox/Inbox";
-
 import DashboardPage from "@/pages/Dashboard/Dashboard";
 import HomePage from "@/pages/Home/Home";
 import InboxPage from "@/pages/Inbox/Inbox";
@@ -18,12 +13,9 @@ import SomedayPage from "@/pages/Someday/Someday";
 
 import { ProtectedRoute } from "./protectedRoute";
 
-function headerLoader(title: string, description: string) {
-  return {
-    title: title,
-    description: description,
-  };
-}
+const InboxAll = () => <InboxPage filterType="all" />;
+const InboxProcessed = () => <InboxPage filterType="processed" />;
+const InboxUnprocessed = () => <InboxPage filterType="unprocessed" />;
 
 export const router = createBrowserRouter([
   {
@@ -51,11 +43,30 @@ export const router = createBrowserRouter([
       {
         path: "dashboard",
         Component: DashboardPage,
-        loader: () => headerLoader("Dashboard", "This is the main page"),
+        loader: () => ({
+          title: "Dashboard",
+          description: "This is the main page",
+        }),
       },
       {
         path: "inbox",
-        Component: InboxPage,
+        Component: InboxAll,
+        loader: () => ({
+          title: "Inbox",
+          description: "These are your all of your tasks.",
+        }),
+      },
+      {
+        path: "processed",
+        Component: InboxProcessed,
+        loader: () => ({
+          title: "Inbox",
+          description: "These are your all of your tasks.",
+        }),
+      },
+      {
+        path: "unproccesed",
+        Component: InboxUnprocessed,
         loader: () => ({
           title: "Inbox",
           description: "These are your all of your tasks.",

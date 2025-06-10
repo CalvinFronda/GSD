@@ -1,9 +1,14 @@
-import { ChevronUp, User2 } from "lucide-react";
+import { ChevronRight, ChevronUp, User2 } from "lucide-react";
 
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
 
 import { signOut } from "firebase/auth";
 
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,14 +22,16 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 
 import { useAuth } from "@/features/auth/authContext";
 
-import { cn } from "@/lib/utils";
 import { sidebarItems } from "@/router/sidebarRoutes";
 import { auth } from "@/shared/firebase/client";
 
@@ -35,54 +42,88 @@ export function AppSidebar() {
     await signOut(auth);
     navigate("/");
   };
+  const location = useLocation();
 
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <div className="p-3 border-gray-200">
-            <SidebarGroupLabel className="text-xl font-bold text-gray-800">
-              GTD Dashboard
-            </SidebarGroupLabel>
-          </div>
-
+          <SidebarHeader>
+            <div className="p-3 ">
+              <SidebarGroupLabel className="text-xl font-bold text-gray-800">
+                GTD Dashboard
+              </SidebarGroupLabel>
+            </div>
+          </SidebarHeader>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton>
-                    <NavLink
-                      to={item.url}
-                      className={({ isActive }) =>
-                        cn(
-                          "flex items-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-colors w-full",
-                          isActive
-                            ? "bg-muted text-foreground"
-                            : "hover:bg-muted/50 text-muted-foreground",
-                        )
-                      }
+              {sidebarItems.map((item) =>
+                item.subItems ? (
+                  <Collapsible
+                    key={item.title}
+                    defaultOpen
+                    className="group/collapsible"
+                  >
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton className="flex items-center justify-between w-full px-3 py-2 rounded-md  group-data-[state=open]/collapsible:text-foreground">
+                          <div className="flex items-center gap-2">
+                            <item.icon className="h-4 w-4" />
+                            <span>{item.title}</span>
+                          </div>
+                          <ChevronRight className="h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+
+                      <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapse-up data-[state=open]:animate-collapse-down">
+                        <SidebarMenuSub>
+                          {item.subItems.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuButton
+                                asChild
+                                size="sm"
+                                isActive={location.pathname === subItem.url}
+                              >
+                                <NavLink to={subItem.url}>
+                                  {subItem.title}
+                                </NavLink>
+                              </SidebarMenuButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                ) : (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={location.pathname === item.url}
                     >
-                      <>
+                      <NavLink to={item.url!}>
                         <item.icon className="h-4 w-4" />
                         <span>{item.title}</span>
-                      </>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ),
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter>
-        <SidebarMenu className="h-10">
+        <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  <User2 /> {userData?.firstName} {userData?.lastName}
-                  <ChevronUp className="ml-auto" />
+                <SidebarMenuButton className="h-10">
+                  <User2 className="h-4 w-4" />
+                  <span>
+                    {userData?.firstName} {userData?.lastName}
+                  </span>
+                  <ChevronUp className="ml-auto h-4 w-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" className="w-56">
