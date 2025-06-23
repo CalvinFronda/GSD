@@ -69,7 +69,7 @@ function InboxItem({ task }: { task: TaskType }) {
               className=" hover:text-red-500 transition-colors duration-200"
               variant="ghost"
               size="icon"
-              onClick={handleDeleteTask}
+              onClick={() => handleDeleteTask()}
             >
               <TrashIcon />
             </Button>
