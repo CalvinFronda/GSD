@@ -20,6 +20,8 @@ export const useFetchTasks = () => {
     const q = query(
       collectionRef,
       where("owner", "==", user.uid),
+      where("deletedAt", "==", null),
+      orderBy("deletedAt"),
       orderBy("createdAt", "desc"),
     );
     // Set up real-time listener

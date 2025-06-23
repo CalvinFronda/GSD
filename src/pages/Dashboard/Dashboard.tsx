@@ -8,6 +8,7 @@ import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 import { useFetchProjects } from "@/hooks/useFetchProjects";
 import { useFetchTasks } from "@/hooks/useFetchTasks";
 
+import DailyTodo from "./children/DailyTodo";
 import { TaskDistro, WeeklyTaskChart } from "./children/DashboardCharts";
 import TopDashboardWidget from "./children/TopDashboardWidget";
 
@@ -66,6 +67,8 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <DailyTodo />
+
         <WeeklyTaskChart />
 
         <TaskDistro />

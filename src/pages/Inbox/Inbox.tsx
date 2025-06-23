@@ -34,14 +34,10 @@ function Inbox({ filterType }: { filterType: string }) {
   useFetchTasks();
 
   const filteredTasks = useMemo(() => {
-    let currentTasks = tasks.filter(
-      (task) => !task.deletedAt && task.status !== TASK_STATUS_TYPE.SOMEDAY,
-    );
-
-    if (filterType === "all") return currentTasks;
+    if (filterType === "all") return tasks;
 
     if (filterType === "unprocessed") {
-      return currentTasks.filter(
+      return tasks.filter(
         (task) =>
           !task.dueDate ||
           !task.difficulty ||
@@ -52,7 +48,7 @@ function Inbox({ filterType }: { filterType: string }) {
     }
 
     // Processed
-    return currentTasks.filter(
+    return tasks.filter(
       (task) =>
         task.dueDate &&
         task.difficulty &&
