@@ -86,7 +86,7 @@ function DailyTodo() {
       data.completedAt === null ? new Date().toISOString() : null;
 
     const isTask = (item: any): item is Task => "content" in item;
-
+    console.log(data);
     const title = isTask(data) ? data.content.title : data.title;
     const description = isTask(data)
       ? data.content.description
@@ -101,6 +101,7 @@ function DailyTodo() {
 
     return await service.updateTask(id, updatedTask);
   }
+
   return (
     <Card className="bg-white rounded-lg border border-gray-200/30 p-6">
       <Form {...toDoForm}>
