@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { TaskType, useTaskStore } from "@/store/useTaskStore";
+import { useTaskStore } from "@/store/useTaskStore";
 
 import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
 import {
@@ -28,16 +28,20 @@ const SHOW_OPTIONS = [
 ] as const;
 
 function Inbox({ filterType }: { filterType: string }) {
-  const tasks = useTaskStore((s) => s.tasks);
+  const task = useTaskStore((s) => s.tasks);
   const [currentPage, setCurrentPage] = useState(0);
   const [showAmount, setShowAmount] = useState(getInitialShowAmount());
   useFetchTasks();
 
   const filteredTasks = useMemo(() => {
-    if (filterType === "all") return tasks;
+    const currentTasks = task.filter(
+      (task) => task.status !== TASK_STATUS_TYPE.DAILY_TODO,
+    );
+
+    if (filterType === "all") return currentTasks;
 
     if (filterType === "unprocessed") {
-      return tasks.filter(
+      return currentTasks.filter(
         (task) =>
           !task.dueDate ||
           !task.difficulty ||
@@ -48,7 +52,7 @@ function Inbox({ filterType }: { filterType: string }) {
     }
 
     // Processed
-    return tasks.filter(
+    return currentTasks.filter(
       (task) =>
         task.dueDate &&
         task.difficulty &&
@@ -56,7 +60,7 @@ function Inbox({ filterType }: { filterType: string }) {
         !task.projectId &&
         task.status !== TASK_STATUS_TYPE.NOT_STARTED,
     );
-  }, [tasks, filterType]);
+  }, [task, filterType]);
 
   const totalPages = Math.ceil(filteredTasks.length / showAmount);
   const startIndex = currentPage * showAmount;

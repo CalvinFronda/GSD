@@ -21,6 +21,10 @@ export default function Dashboard() {
   useFetchTasks();
   useFetchProjects();
 
+  const inbox = tasks.filter(
+    (task) => task.status !== TASK_STATUS_TYPE.DAILY_TODO,
+  );
+
   const dueToday = tasks.filter(
     (task) => task.dueDate && isToday(parseISO(task.dueDate)),
   );
@@ -42,7 +46,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <TopDashboardWidget
           title="Inbox"
-          count={tasks.length}
+          count={inbox.length}
           Icon={<InboxIcon className="text-blue-500" />}
           meta={{ color: "red", text: "unprocessed", count: 0 }}
         />

@@ -1,8 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, Settings, X } from "lucide-react";
 import { z } from "zod";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -17,114 +19,233 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
-const items = [
-  {
-    id: "recents",
-    label: "Recents",
-  },
-  {
-    id: "home",
-    label: "Home",
-  },
-  {
-    id: "applications",
-    label: "Applications",
-  },
-  {
-    id: "desktop",
-    label: "Desktop",
-  },
-  {
-    id: "downloads",
-    label: "Downloads",
-  },
-  {
-    id: "documents",
-    label: "Documents",
-  },
-] as const;
+import { useAuth } from "@/features/auth/authContext";
+
+import TasksFirestoreService from "@/services/db/tasks.firestore.service";
+
+import { useTaskStore } from "@/store/useTaskStore";
+
+import { TASK_STATUS_TYPE } from "@/constants/firestore.constants";
+import { Task } from "@/models";
+import { TaskInputDialog } from "@/types";
 
 const FormSchema = z.object({
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one item.",
-  }),
+  title: z.string(),
 });
 
 function DailyTodo() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      items: ["recents", "home"],
-    },
-  });
+  const [addTodoBtn, setAddTodoBtn] = useState(false);
+  const [todoInput, setTodoInput] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [editedTitles, setEditedTitles] = useState<Record<string, string>>({});
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    // toast("You submitted the following values", {
-    //   description: (
-    //     <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // })
+  const { user } = useAuth();
+
+  const { tasks } = useTaskStore((s) => s);
+
+  const currentTodos = tasks
+    .filter((task) => task.status === TASK_STATUS_TYPE.DAILY_TODO)
+    .sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    );
+
+  const toDoForm = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+  });
+  const service = new TasksFirestoreService();
+  const handleCreateTask = async () => {
+    const parsed = FormSchema.safeParse({ title: todoInput });
+
+    if (!parsed.success) {
+      console.error(parsed.error.errors[0].message);
+      return;
+    }
+
+    try {
+      if (!user?.uid) return;
+      await service.createTask(user.uid, {
+        title: parsed.data.title,
+        status: TASK_STATUS_TYPE.DAILY_TODO,
+      });
+
+      setTodoInput("");
+      setAddTodoBtn(false);
+    } catch (error) {
+      console.error("Failed to create task");
+    }
+  };
+
+  async function updateTodoCompletion(
+    id: string,
+    data: TaskInputDialog | Task,
+  ) {
+    const completedAt =
+      data.completedAt === null ? new Date().toISOString() : null;
+
+    const isTask = (item: any): item is Task => "content" in item;
+    console.log(data);
+    const title = isTask(data) ? data.content.title : data.title;
+    const description = isTask(data)
+      ? data.content.description
+      : data.description || "";
+
+    const updatedTask: TaskInputDialog = {
+      ...data,
+      title,
+      description,
+      completedAt,
+    };
+
+    return await service.updateTask(id, updatedTask);
   }
 
   return (
     <Card className="bg-white rounded-lg border border-gray-200/30 p-6">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <Form {...toDoForm}>
+        <form className="space-y-8">
           <FormField
-            control={form.control}
-            name="items"
+            control={toDoForm.control}
+            name="title"
             render={() => (
               <FormItem>
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Daily Todo
-                  </h3>
+                  <div className="flex justify-between">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Daily Todo
+                    </h3>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      type="button"
+                      onClick={() => setEditMode((prev) => !prev)}
+                    >
+                      <Settings />
+                    </Button>
+                  </div>
                   <FormDescription>
                     Track your daily habits. These reset everyday and we will
                     show you how you're doing throughout the week
                   </FormDescription>
                 </div>
-                {items.map((item) => (
+                {currentTodos.map((task) => (
                   <FormField
-                    key={item.id}
-                    control={form.control}
-                    name="items"
-                    render={({ field }) => {
+                    key={task.id}
+                    control={toDoForm.control}
+                    name="title"
+                    render={() => {
                       return (
                         <FormItem
-                          key={item.id}
+                          key={task.id}
                           className="flex flex-row items-center gap-2"
                         >
                           <FormControl>
                             <Checkbox
-                              checked={field.value?.includes(item.id)}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, item.id])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== item.id,
-                                      ),
-                                    );
+                              checked={!!task.completedAt}
+                              disabled={editMode || addTodoBtn}
+                              onCheckedChange={async () => {
+                                if (task.id) {
+                                  await updateTodoCompletion(task.id, task);
+                                }
                               }}
                             />
                           </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            {item.label}
-                          </FormLabel>
+
+                          {editMode ? (
+                            <>
+                              <Input
+                                className="w-full max-w-xs"
+                                value={
+                                  editedTitles[task.id ?? ""] ??
+                                  task.content.title
+                                }
+                                onChange={(e) =>
+                                  setEditedTitles((prev) => ({
+                                    ...prev,
+                                    [task.id ?? ""]: e.target.value,
+                                  }))
+                                }
+                              />
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                type="button"
+                                onClick={async () => {
+                                  const newTitle = editedTitles[task.id ?? ""];
+                                  if (
+                                    newTitle &&
+                                    newTitle !== task.content.title &&
+                                    task.id
+                                  ) {
+                                    await updateTodoCompletion(task.id, {
+                                      ...task,
+                                      content: {
+                                        title: newTitle,
+                                        description: task.content.description,
+                                        media: task.content.media,
+                                      },
+                                    });
+
+                                    setEditMode(false);
+                                  }
+                                }}
+                              >
+                                <Check />
+                              </Button>
+
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                type="button"
+                                onClick={async () => {
+                                  if (!task.id) return;
+                                  await service.deleteTaskById(task.id);
+                                }}
+                              >
+                                <X />
+                              </Button>
+                            </>
+                          ) : (
+                            <FormLabel className="text-sm font-normal">
+                              {task.content.title}
+                            </FormLabel>
+                          )}
                         </FormItem>
                       );
                     }}
                   />
                 ))}
+
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+
+          <div className="flex w-full gap-2 items-center">
+            {addTodoBtn ? (
+              <>
+                <Input
+                  value={todoInput}
+                  onChange={(e) => setTodoInput(e.target.value)}
+                  placeholder="Enter task title"
+                />
+                <Button size="icon" onClick={handleCreateTask}>
+                  +
+                </Button>
+                <X
+                  className="cursor-pointer"
+                  color="red"
+                  onClick={() => setAddTodoBtn(false)}
+                />
+              </>
+            ) : (
+              <Button variant="ghost" onClick={() => setAddTodoBtn(true)}>
+                + Add task
+              </Button>
+            )}
+          </div>
         </form>
       </Form>
     </Card>
