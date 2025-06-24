@@ -42,11 +42,12 @@ class TasksFirestoreService extends FirestoreService {
         description: data.description,
         media: data?.media || [],
       },
-      dueDate: data.dueDate,
+      dueDate: data.dueDate || null,
       difficulty: data.difficulty,
       weight: data.weight,
       status: data?.status,
       completedAt: data?.completedAt,
+      projectId: data?.projectId || null,
       updatedAt: new Date().toISOString(),
     };
 
@@ -62,7 +63,7 @@ class TasksFirestoreService extends FirestoreService {
       (data.difficulty as TaskDifficulty) || null,
       (data.weight as TaskWeight) || null,
       [],
-      data.title,
+      data.title || "",
       data.description || "",
       [],
       data.projectId || "",

@@ -13,12 +13,12 @@ type TaskWeight = 1 | 2 | 3 | 4;
 
 type TaskInputDialog = {
   title?: string;
-  dueDate?: string;
+  dueDate?: string | null;
   description?: string;
   weight?: number;
   difficulty?: number;
   media?: string[];
-  projectId?: string;
+  projectId?: string | null;
   status?: string;
   completedAt?: string | null;
 };
